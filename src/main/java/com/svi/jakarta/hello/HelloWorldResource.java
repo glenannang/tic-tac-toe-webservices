@@ -13,7 +13,7 @@ public class HelloWorldResource {
     @Produces({ MediaType.APPLICATION_JSON })
     public Hello hello(@QueryParam("name") String name) {
         if ((name == null) || name.trim().isEmpty()) {
-            name = "world";
+            name = "sample";
         }
 
         return new Hello(name);
