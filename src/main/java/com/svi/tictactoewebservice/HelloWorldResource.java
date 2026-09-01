@@ -1,4 +1,4 @@
-package com.svi.jakarta.hello;
+package com.svi.tictactoewebservice;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

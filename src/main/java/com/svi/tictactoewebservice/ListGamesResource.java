@@ -1,4 +1,4 @@
-package com.svi.jakarta.hello;
+package com.svi.tictactoewebservice;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
