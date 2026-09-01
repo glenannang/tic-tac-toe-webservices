@@ -40,6 +40,27 @@ public class SaveResource {
                 writer.write(System.lineSeparator());
             }
 
+            File gameFile = new File(
+                    recordsFolder,
+                    record.getGameid() + ".txt"
+            );
+
+            if (!gameFile.exists()) {
+                gameFile.createNewFile();
+            }
+
+            try (FileWriter writer = new FileWriter(gameFile, true)) {
+                writer.write(
+                        record.getGameid() + "," +
+                                record.getPlayerid() + "," +
+                                record.getSymbol() + "," +
+                                record.getLocation() + "," +
+                                record.getDatesave()
+                );
+
+                writer.write(System.lineSeparator());
+            }
+
             return Response
                     .status(200)
                     .entity("{\"msg\":\"Record saved.\"}")
