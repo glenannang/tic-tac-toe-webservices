@@ -1,4 +1,8 @@
 package com.svi.tictactoewebservice;
+
+import com.svi.tictactoewebservice.model.MoveRecord;
+import com.svi.tictactoewebservice.service.GameService;
+
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
@@ -8,55 +12,42 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+
 import java.io.IOException;
+import java.util.List;
+
 
 @Path("game")
 
 public class GetGameResource {
+    private final GameService gameService = new GameService();
 
     @GET
     @Path("{gameId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getGame(@PathParam("gameId") String gameId) {
 
-        File recordsFolder = new File("records");
-        File gameFile = new File(recordsFolder, gameId + ".txt");
+        try {
+            List<MoveRecord> moves = gameService.getGameDetails(gameId);
 
-        if (!gameFile.exists()) {
-            return Response.status(402)
-                    .entity("{\"msg\":\"Record not found\"}")
-                    .build();
-        }
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(gameFile))) {
+            if (moves == null) {
+                return Response.status(402)
+                        .entity("{\"msg\":\"Record not found\"}")
+                        .build();
+            }
 
             JsonArrayBuilder moveList = Json.createArrayBuilder();
-            String line;
 
-            while ((line = reader.readLine()) != null) {
-
-                if (line.trim().isEmpty()) {
-                    continue;
-                }
-
-                String[] fields = line.split(",", 5);
-
-                if (fields.length != 5) {
-                    return Response.status(500)
-                            .entity("{\"msg\":\"The server ran into an unexpected exception.\"}")
-                            .build();
-                }
-
-                moveList.add(Json.createObjectBuilder()
-                        .add("gameid", fields[0].trim())
-                        .add("playerid", fields[1].trim())
-                        .add("symbol", fields[2].trim())
-                        .add("location", fields[3].trim())
-                        .add("datesave", fields[4].trim())
-                        .build());
+            for (MoveRecord move : moves) {
+                moveList.add(
+                        Json.createObjectBuilder()
+                                .add("gameid", move.getGameid())
+                                .add("playerid", move.getPlayerid())
+                                .add("symbol", move.getSymbol())
+                                .add("location", move.getLocation())
+                                .add("datesave", move.getDatesave())
+                                .build()
+                );
             }
 
             JsonObject responseBody = Json.createObjectBuilder()

@@ -16,4 +16,8 @@ public class GameService {
         return gameRepository.findGamesByPlayerId(playerId);
     }
 
+    public List<MoveRecord> getGameDetails(String gameId) throws IOException {
+        return gameRepository.findMovesByGameId(gameId);
+    }
+
 }
