@@ -1,5 +1,5 @@
 package com.svi.tictactoewebservice;
-
+import com.svi.tictactoewebservice.dto.response.ErrorResponse;
 import com.svi.tictactoewebservice.model.MoveRecord;
 import com.svi.tictactoewebservice.service.GameService;
 import com.svi.tictactoewebservice.dto.response.GameDetailsResponse;
@@ -30,7 +30,7 @@ public class GetGameResource {
 
             if (moves == null) {
                 return Response.status(402)
-                        .entity("{\"msg\":\"Record not found\"}")
+                        .entity(new ErrorResponse("Record not found"))
                         .build();
             }
 
@@ -39,7 +39,7 @@ public class GetGameResource {
 
         } catch (IOException e) {
             return Response.status(500)
-                    .entity("{\"msg\":\"The server ran into an unexpected exception.\"}")
+                    .entity(new ErrorResponse("The server ran into an unexpected exception."))
                     .build();
         }
     }

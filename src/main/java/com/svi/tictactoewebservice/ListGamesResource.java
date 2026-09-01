@@ -1,4 +1,5 @@
 package com.svi.tictactoewebservice;
+import com.svi.tictactoewebservice.dto.response.ErrorResponse;
 import com.svi.tictactoewebservice.service.GameService;
 import com.svi.tictactoewebservice.dto.response.GameListResponse;
 
@@ -27,7 +28,7 @@ public class ListGamesResource {
             List<String> games = gameService.getPlayerGames(playerId);
 
             if (games == null) {
-                return Response.status(402).entity("{\"msg\":\"Record not found\"}").build();
+                return Response.status(402).entity(new ErrorResponse("Record not found")).build();
             }
             List<GameListResponse.GameId> gameList = new ArrayList<>();
 
@@ -35,14 +36,13 @@ public class ListGamesResource {
                 gameList.add(new GameListResponse.GameId(gameId));
             }
 
-            GameListResponse responseBody =
-                    new GameListResponse(gameList, "Records found");
+            GameListResponse responseBody = new GameListResponse(gameList, "Records found");
 
             return Response.ok(responseBody).build();
 
 
         } catch(IOException e){
-            return Response.status(500).entity("{\"msg\":\"The server ran into an unexpected exception.\"}").build();
+            return Response.status(500).entity(new ErrorResponse("The server ran into an unexpected exception.")).build();
         }
 
     }
