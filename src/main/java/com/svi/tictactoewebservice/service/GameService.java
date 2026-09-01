@@ -1,4 +1,5 @@
 package com.svi.tictactoewebservice.service;
+import com.svi.tictactoewebservice.dto.request.MoveRequest;
 import com.svi.tictactoewebservice.model.MoveRecord;
 import com.svi.tictactoewebservice.repository.GameRepository;
 
@@ -8,7 +9,14 @@ import java.util.List;
 public class GameService {
     private final GameRepository gameRepository = new GameRepository();
 
-    public void saveMove(MoveRecord record) throws IOException {
+    public void saveMove(MoveRequest request) throws IOException {
+        MoveRecord record = new MoveRecord();
+        record.setGameid(request.getGameid());
+        record.setPlayerid(request.getPlayerid());
+        record.setSymbol(request.getSymbol());
+        record.setLocation(request.getLocation());
+        record.setDatesave(request.getDatesave());
+
         gameRepository.saveMove(record);
     }
 

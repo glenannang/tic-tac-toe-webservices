@@ -1,6 +1,6 @@
 package com.svi.tictactoewebservice;
 
-import com.svi.tictactoewebservice.model.MoveRecord;
+import com.svi.tictactoewebservice.dto.request.MoveRequest;
 import com.svi.tictactoewebservice.service.GameService;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -18,10 +18,10 @@ public class SaveResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
 
-    public Response save(MoveRecord record) {
+    public Response save(MoveRequest request) {
 
         try{
-              gameService.saveMove(record);
+              gameService.saveMove(request);
 
             return Response
                     .status(200)
