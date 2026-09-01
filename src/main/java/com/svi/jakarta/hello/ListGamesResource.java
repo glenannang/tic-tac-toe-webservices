@@ -1,5 +1,8 @@
 package com.svi.jakarta.hello;
 
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -19,7 +22,6 @@ public class ListGamesResource {
     public Response listGames(@PathParam("playerId") String playerId) {
 
         File recordsFolder = new File("records");
-
         File playerFile = new File(recordsFolder, playerId + ".txt");
 
         if (!playerFile.exists()) {
@@ -27,21 +29,25 @@ public class ListGamesResource {
         }
 
         try(BufferedReader reader = new BufferedReader(new FileReader(playerFile))){
+            JsonArrayBuilder gameList = Json.createArrayBuilder();
             String line;
-            String games= "";
+
 
             while((line = reader.readLine()) != null){
-                //System.out.println(line);
-                games += line + " ";
+                if (line.trim().isEmpty()) {continue;}
+                gameList.add(Json.createObjectBuilder().add("id", line.trim()).build());
             }
 
-            return Response.status(200).entity("{\"games\":\"" + games + "\"}").build();
+            JsonObject responseBody = Json.createObjectBuilder()
+                            .add("list", gameList.build())
+                            .add("msg", "Records found")
+                            .build();
+
+            return Response.ok(responseBody).build();
 
         }catch(IOException e){
             return Response.status(500).entity("{\"msg\":\"The server ran into an unexpected exception.\"}").build();
         }
-
-
 
     }
 
