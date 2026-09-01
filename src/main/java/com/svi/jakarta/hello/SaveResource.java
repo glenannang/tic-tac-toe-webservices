@@ -7,6 +7,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import java.io.File;
+
 @Path("save")
 public class SaveResource {
 
@@ -15,6 +17,13 @@ public class SaveResource {
     @Produces(MediaType.APPLICATION_JSON)
 
     public Response save(MoveRecord record) {
+
+        File recordsFolder = new File("records");
+
+        if(!recordsFolder.exists()){
+            recordsFolder.mkdir();
+        }
+
         return Response
                 .status(200)
                 .entity("{\"msg\":\"Record saved.\"}")
