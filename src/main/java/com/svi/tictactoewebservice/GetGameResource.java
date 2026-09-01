@@ -2,10 +2,8 @@ package com.svi.tictactoewebservice;
 
 import com.svi.tictactoewebservice.model.MoveRecord;
 import com.svi.tictactoewebservice.service.GameService;
+import com.svi.tictactoewebservice.dto.response.GameDetailsResponse;
 
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -36,25 +34,7 @@ public class GetGameResource {
                         .build();
             }
 
-            JsonArrayBuilder moveList = Json.createArrayBuilder();
-
-            for (MoveRecord move : moves) {
-                moveList.add(
-                        Json.createObjectBuilder()
-                                .add("gameid", move.getGameid())
-                                .add("playerid", move.getPlayerid())
-                                .add("symbol", move.getSymbol())
-                                .add("location", move.getLocation())
-                                .add("datesave", move.getDatesave())
-                                .build()
-                );
-            }
-
-            JsonObject responseBody = Json.createObjectBuilder()
-                    .add("list", moveList.build())
-                    .add("msg", "Records found")
-                    .build();
-
+            GameDetailsResponse responseBody = new GameDetailsResponse(moves, "Records found");
             return Response.ok(responseBody).build();
 
         } catch (IOException e) {
