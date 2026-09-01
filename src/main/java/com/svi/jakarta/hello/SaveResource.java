@@ -67,12 +67,10 @@ public class SaveResource {
                     .build();
 
         } catch(IOException e){
+            return Response.status(401).entity("{\"msg\":\"Record could not be saved\"}").build();
 
-            return Response
-                    .status(401)
-                    .entity("{\"msg\":\"Record could not be saved\"}")
-                    .build();
-
+        } catch (Exception e){
+            return Response.status(500).entity("{\"msg\":\"Record could not be saved\"}").build();
         }
 
     }
