@@ -28,20 +28,27 @@ public class ListGamesResource {
 
         try(BufferedReader reader = new BufferedReader(new FileReader(playerFile))){
             String line;
-            String games= "";
+            StringBuilder gamesJson = new StringBuilder();
+            gamesJson.append("{\"list\":[");
+
+            boolean first= true;
 
             while((line = reader.readLine()) != null){
-                //System.out.println(line);
-                games += line + " ";
+
+                if(!first){
+                    gamesJson.append(",");
+                }
+                gamesJson.append("{\"id\":\"").append(line).append("\"}");
+
+                first = false;
             }
+            gamesJson.append("],\"msg\":\"Records found\"}");
 
-            return Response.status(200).entity("{\"games\":\"" + games + "\"}").build();
+            return Response.status(200).entity(gamesJson.toString()).build();
 
-        }catch(IOException e){
+        } catch(IOException e){
             return Response.status(500).entity("{\"msg\":\"The server ran into an unexpected exception.\"}").build();
         }
-
-
 
     }
 
