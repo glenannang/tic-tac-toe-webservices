@@ -17,7 +17,7 @@ public class MoveRequestValidator {
 
         validateSymbol(request.getSymbol());
         validateLocation(request.getLocation());
-        //validateDateSave(request.getDatesave());
+
     }
 
     private void validateSymbol(String symbol) {
@@ -43,20 +43,6 @@ public class MoveRequestValidator {
         }
 
     }
-
-//    private void validateDateSave(String datesave) {
-//        if (datesave == null || datesave.trim().isEmpty()) {
-//            throw new IllegalArgumentException("Date saved is required.");
-//        }
-//
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-//
-//        try {
-//            LocalDateTime.parse(datesave, formatter);
-//        } catch (DateTimeParseException e) {
-//            throw new IllegalArgumentException("Date saved must follow yyyy-MM-dd HH:mm:ss format.");
-//        }
-//    }
 
 
 }

@@ -24,7 +24,6 @@ public class GameService {
         record.setPlayerid(request.getPlayerid());
         record.setSymbol(request.getSymbol());
         record.setLocation(request.getLocation());
-        //record.setDatesave(request.getDatesave());
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         record.setDatesave(LocalDateTime.now().format(formatter));

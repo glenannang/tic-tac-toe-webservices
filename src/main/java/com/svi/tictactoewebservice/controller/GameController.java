@@ -1,12 +1,16 @@
 package com.svi.tictactoewebservice.controller;
 
 import com.svi.tictactoewebservice.dto.request.MoveRequest;
+import com.svi.tictactoewebservice.dto.request.RoomRequest;
 import com.svi.tictactoewebservice.dto.response.ApiResponse;
 import com.svi.tictactoewebservice.dto.response.ErrorResponse;
 import com.svi.tictactoewebservice.dto.response.GameListResponse;
+import com.svi.tictactoewebservice.model.Room;
 import com.svi.tictactoewebservice.service.GameService;
+import com.svi.tictactoewebservice.service.RoomService;
 import com.svi.tictactoewebservice.dto.response.GameDetailsResponse;
 import com.svi.tictactoewebservice.model.MoveRecord;
+
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -26,6 +30,7 @@ import java.util.List;
 public class GameController {
 
     private final GameService gameService = new GameService();
+    private final RoomService roomService = new RoomService();
 
     @POST
     @Path("save")
@@ -98,6 +103,21 @@ public class GameController {
 
         } catch (IOException e) {
             return Response.status(500).entity(new ErrorResponse("The server ran into an unexpected exception.")).build();
+        }
+    }
+
+    @POST
+    @Path("/createRoom")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createRoom(RoomRequest request) {
+        try {
+            Room room = roomService.createRoom(request);
+            return Response.status(Response.Status.CREATED).entity(room).build();
+        } catch (IOException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ErrorResponse("Failed to create room.")).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorResponse(e.getMessage())).build();
         }
     }
 
