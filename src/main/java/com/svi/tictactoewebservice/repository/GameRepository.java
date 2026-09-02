@@ -29,9 +29,28 @@ public class GameRepository {
             playerFile.createNewFile();
         }
 
-        try (FileWriter writer = new FileWriter(playerFile, true)) {
-            writer.write(record.getGameid());
-            writer.write(System.lineSeparator());
+        if (!playerFile.exists()) {
+            playerFile.createNewFile();
+        }
+
+        boolean gameAlreadyExists = false;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(playerFile))) {
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().equals(record.getGameid())) {
+                    gameAlreadyExists = true;
+                    break;
+                }
+            }
+        }
+
+        if (!gameAlreadyExists) {
+            try (FileWriter writer = new FileWriter(playerFile, true)) {
+                writer.write(record.getGameid());
+                writer.write(System.lineSeparator());
+            }
         }
 
         File gameFile = new File(
