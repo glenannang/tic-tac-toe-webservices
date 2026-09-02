@@ -121,4 +121,21 @@ public class GameController {
         }
     }
 
+
+    @GET
+    @Path("getRoom/{roomId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getRoom(@PathParam("roomId") String roomId){
+        try {
+            Room room = roomService.getRoom(roomId);
+            return Response.status(Response.Status.OK).entity(room).build();
+        } catch (IOException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ErrorResponse("Failed to create room.")).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorResponse(e.getMessage())).build();
+        }
+
+    }
+
+
 }
