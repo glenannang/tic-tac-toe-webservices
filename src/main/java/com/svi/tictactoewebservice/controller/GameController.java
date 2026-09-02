@@ -37,7 +37,11 @@ public class GameController {
             gameService.saveMove(request);
             return Response.ok(new ApiResponse("Record saved.")).build();
 
-        } catch (IOException e) {
+        }
+        catch (IllegalArgumentException e){
+            return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorResponse(e.getMessage())).build();
+        }
+        catch (IOException e) {
             return Response.status(401).entity(new ErrorResponse("Record could not be saved")).build();
 
         } catch (Exception e) {
@@ -66,6 +70,9 @@ public class GameController {
 
             return Response.ok(new GameListResponse(gameList, "Records found")).build();
 
+        } catch(IllegalArgumentException e){
+            return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorResponse(e.getMessage())).build();
+
         } catch (IOException e) {
             return Response.status(500).entity(new ErrorResponse("The server ran into an unexpected exception.")).build();
         }
@@ -85,6 +92,9 @@ public class GameController {
             }
 
             return Response.ok(new GameDetailsResponse(moves, "Records found")).build();
+
+        } catch(IllegalArgumentException e){
+            return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorResponse(e.getMessage())).build();
 
         } catch (IOException e) {
             return Response.status(500).entity(new ErrorResponse("The server ran into an unexpected exception.")).build();

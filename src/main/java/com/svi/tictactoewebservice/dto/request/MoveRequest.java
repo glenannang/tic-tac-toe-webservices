@@ -6,7 +6,7 @@ public class MoveRequest {
     private String symbol;
     private String location;
     private String playerid;
-    private String datesave;
+    //private String datesave;
 
     public MoveRequest() {
     }
@@ -43,11 +43,11 @@ public class MoveRequest {
         this.playerid = playerid;
     }
 
-    public String getDatesave() {
-        return datesave;
-    }
-
-    public void setDatesave(String datesave) {
-        this.datesave = datesave;
-    }
+//    public String getDatesave() {
+//        return datesave;
+//    }
+//
+//    public void setDatesave(String datesave) {
+//        this.datesave = datesave;
+//    }
 }
