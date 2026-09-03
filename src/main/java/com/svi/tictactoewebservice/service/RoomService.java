@@ -12,13 +12,13 @@ public class RoomService {
 
     private final RoomRepository roomRepository = new RoomRepository();
 
-    public Room createRoom(RoomRequest request) throws IOException {
+    public RoomResponse createRoom(RoomRequest request) throws IOException {
 
         Room room = new Room();
         room.setRoomCode(request.getRoomCode());
         roomRepository.createRoom(room);
 
-        return room;
+        return new RoomResponse(room.getRoomCode(),room.getGameIds());
     }
 
     public RoomResponse getRoom(String roomCode) throws IOException {

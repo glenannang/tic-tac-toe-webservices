@@ -3,7 +3,6 @@ package com.svi.tictactoewebservice.controller;
 import com.svi.tictactoewebservice.dto.request.MoveRequest;
 import com.svi.tictactoewebservice.dto.request.RoomRequest;
 import com.svi.tictactoewebservice.dto.response.*;
-import com.svi.tictactoewebservice.model.Room;
 import com.svi.tictactoewebservice.service.GameService;
 import com.svi.tictactoewebservice.service.RoomService;
 import com.svi.tictactoewebservice.model.MoveRecord;
@@ -109,10 +108,12 @@ public class GameController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createRoom(RoomRequest request) {
         try {
-            Room room = roomService.createRoom(request);
-            return Response.status(Response.Status.CREATED).entity(room).build();
+            RoomResponse roomResponse = roomService.createRoom(request);
+            return Response.status(Response.Status.CREATED).entity(roomResponse).build();
+
         } catch (IOException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ErrorResponse("Failed to create room.")).build();
+
         } catch (IllegalArgumentException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorResponse(e.getMessage())).build();
         }
@@ -132,7 +133,8 @@ public class GameController {
             return Response.ok(roomResponse).build();
 
         } catch (IOException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ErrorResponse("Failed to create room.")).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ErrorResponse("Failed to retrieve room.")).build();
+
         } catch (IllegalArgumentException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorResponse(e.getMessage())).build();
         }
