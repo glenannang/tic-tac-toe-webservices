@@ -2,13 +2,10 @@ package com.svi.tictactoewebservice.controller;
 
 import com.svi.tictactoewebservice.dto.request.MoveRequest;
 import com.svi.tictactoewebservice.dto.request.RoomRequest;
-import com.svi.tictactoewebservice.dto.response.ApiResponse;
-import com.svi.tictactoewebservice.dto.response.ErrorResponse;
-import com.svi.tictactoewebservice.dto.response.GameListResponse;
+import com.svi.tictactoewebservice.dto.response.*;
 import com.svi.tictactoewebservice.model.Room;
 import com.svi.tictactoewebservice.service.GameService;
 import com.svi.tictactoewebservice.service.RoomService;
-import com.svi.tictactoewebservice.dto.response.GameDetailsResponse;
 import com.svi.tictactoewebservice.model.MoveRecord;
 
 
@@ -127,8 +124,13 @@ public class GameController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getRoom(@PathParam("roomId") String roomId){
         try {
-            Room room = roomService.getRoom(roomId);
-            return Response.status(Response.Status.OK).entity(room).build();
+            RoomResponse roomResponse = roomService.getRoom(roomId);
+
+            if(roomResponse == null){
+                return Response.status(Response.Status.NOT_FOUND).entity(new ErrorResponse("Room not found")).build();
+            }
+            return Response.ok(roomResponse).build();
+
         } catch (IOException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ErrorResponse("Failed to create room.")).build();
         } catch (IllegalArgumentException e) {
