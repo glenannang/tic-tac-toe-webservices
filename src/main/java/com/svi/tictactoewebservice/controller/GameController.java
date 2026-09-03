@@ -102,6 +102,7 @@ public class GameController {
         }
     }
 
+
     @POST
     @Path("/createRoom")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -116,6 +117,25 @@ public class GameController {
 
         } catch (IllegalArgumentException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorResponse(e.getMessage())).build();
+        }
+    }
+
+    @POST
+    @Path("/rooms/{roomCode}/games")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createGameRecord(@PathParam("roomCode") String roomCode) {
+
+        try {
+            GameIdResponse gameIdResponse = gameService.createGameRecord(roomCode);
+
+            if (gameIdResponse == null) {
+                return Response.status(Response.Status.NOT_FOUND).entity(new ErrorResponse("Room not found.")).build();
+            }
+
+            return Response.status(Response.Status.CREATED).entity(gameIdResponse).build();
+
+        } catch (IOException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ErrorResponse("Failed to create game record.")).build();
         }
     }
 
