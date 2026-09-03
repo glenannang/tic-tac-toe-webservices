@@ -3,7 +3,6 @@ import com.svi.tictactoewebservice.dto.request.MoveRequest;
 import com.svi.tictactoewebservice.model.MoveRecord;
 import com.svi.tictactoewebservice.repository.GameRepository;
 import com.svi.tictactoewebservice.service.GameService;
-import com.svi.tictactoewebservice.service.RoomService;
 import com.svi.tictactoewebservice.validator.IdValidator;
 import com.svi.tictactoewebservice.validator.MoveRequestValidator;
 import com.svi.tictactoewebservice.dto.response.GameIdResponse;
@@ -20,7 +19,7 @@ public class GameServiceImpl implements GameService {
     private final GameRepository gameRepository = new GameRepository();
     private final MoveRequestValidator moveRequestValidator = new MoveRequestValidator();
     private final IdValidator idValidator = new IdValidator();
-    private final RoomService roomService = new RoomService();
+    private final RoomServiceImpl roomService = new RoomServiceImpl();
 
     @Override
     public void saveMove(MoveRequest request) throws IOException {

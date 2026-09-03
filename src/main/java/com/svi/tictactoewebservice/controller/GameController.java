@@ -4,7 +4,7 @@ import com.svi.tictactoewebservice.dto.request.MoveRequest;
 import com.svi.tictactoewebservice.dto.request.RoomRequest;
 import com.svi.tictactoewebservice.dto.response.*;
 import com.svi.tictactoewebservice.service.impl.GameServiceImpl;
-import com.svi.tictactoewebservice.service.RoomService;
+import com.svi.tictactoewebservice.service.impl.RoomServiceImpl;
 import com.svi.tictactoewebservice.model.MoveRecord;
 
 
@@ -26,7 +26,7 @@ import java.util.List;
 public class GameController {
 
     private final GameServiceImpl gameService = new GameServiceImpl();
-    private final RoomService roomService = new RoomService();
+    private final RoomServiceImpl roomService = new RoomServiceImpl();
 
     @POST
     @Path("save")
