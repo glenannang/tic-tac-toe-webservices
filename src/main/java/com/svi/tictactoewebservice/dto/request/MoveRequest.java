@@ -43,11 +43,4 @@ public class MoveRequest {
         this.playerid = playerid;
     }
 
-//    public String getDatesave() {
-//        return datesave;
-//    }
-//
-//    public void setDatesave(String datesave) {
-//        this.datesave = datesave;
-//    }
 }
