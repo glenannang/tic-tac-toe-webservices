@@ -1,6 +1,8 @@
 package com.svi.tictactoewebservice.controller;
 
+import com.svi.tictactoewebservice.dto.request.GameRequest;
 import com.svi.tictactoewebservice.dto.request.MoveRequest;
+import com.svi.tictactoewebservice.dto.request.PlayerRequest;
 import com.svi.tictactoewebservice.dto.response.*;
 import com.svi.tictactoewebservice.service.impl.GameServiceImpl;
 import com.svi.tictactoewebservice.model.MoveRecord;
@@ -48,9 +50,10 @@ public class GameController {
     }
 
     @GET
-    @Path("list-games/{playerId}")
+    @Path("/player/{playerId}/games")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listGames(@PathParam("playerId") String playerId) {
+    public Response listGames(@PathParam("playerId") String playerId, PlayerRequest request) {
 
         try {
             List<String> games = gameService.getPlayerGames(playerId);
@@ -77,8 +80,9 @@ public class GameController {
 
     @GET
     @Path("/{gameId}")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getGame(@PathParam("gameId") String gameId) {
+    public Response getGame(@PathParam("gameId") String gameId, GameRequest request) {
 
         try {
             List<MoveRecord> moves = gameService.getGameDetails(gameId);
