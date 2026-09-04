@@ -28,8 +28,8 @@ public class RoomController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createRoom(RoomRequest request) {
         try {
-            RoomResponse roomResponse = roomService.createRoom(request);
-            return Response.status(Response.Status.CREATED).entity(roomResponse).build();
+            roomService.createRoom(request);
+            return Response.status(Response.Status.CREATED).entity(new ApiResponse("Room record created.")).build();
 
         } catch (IOException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ErrorResponse("Failed to create room.")).build();
