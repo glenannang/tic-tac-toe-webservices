@@ -17,14 +17,13 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 
 
-@Path("")
+@Path("/room")
 public class RoomController {
 
     private final GameServiceImpl gameService = new GameServiceImpl();
     private final RoomServiceImpl roomService = new RoomServiceImpl();
 
     @POST
-    @Path("/createRoom")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createRoom(RoomRequest request) {
@@ -41,7 +40,7 @@ public class RoomController {
     }
 
     @POST
-    @Path("/rooms/{roomCode}/games")
+    @Path("/{roomCode}/games")
     @Produces(MediaType.APPLICATION_JSON)
     public Response createGameRecord(@PathParam("roomCode") String roomCode) {
 
@@ -60,7 +59,7 @@ public class RoomController {
     }
 
     @GET
-    @Path("getRoom/{roomId}")
+    @Path("/{roomId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getRoom(@PathParam("roomId") String roomId){
         try {

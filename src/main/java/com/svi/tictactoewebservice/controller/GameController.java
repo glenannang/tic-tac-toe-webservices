@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Path("")
+@Path("/game")
 public class GameController {
 
     private final GameServiceImpl gameService = new GameServiceImpl();
@@ -76,7 +76,7 @@ public class GameController {
     }
 
     @GET
-    @Path("game/{gameId}")
+    @Path("/{gameId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getGame(@PathParam("gameId") String gameId) {
 
