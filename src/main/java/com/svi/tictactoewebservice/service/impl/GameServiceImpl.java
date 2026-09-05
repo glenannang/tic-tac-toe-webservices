@@ -37,11 +37,7 @@ public class GameServiceImpl implements GameService {
 
         gameRepository.saveMove(record);
     }
-    @Override
-    public List<String> getPlayerGames(String playerId) throws IOException {
-        idValidator.validatePlayerId(playerId);
-        return gameRepository.findGamesByPlayerId(playerId);
-    }
+
 
     @Override
     public List<MoveRecord> getGameDetails(String gameId) throws IOException {

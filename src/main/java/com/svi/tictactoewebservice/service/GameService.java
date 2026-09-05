@@ -11,8 +11,6 @@ public interface GameService {
 
     void saveMove(MoveRequest request) throws IOException;
 
-    List<String> getPlayerGames(String playerId) throws IOException;
-
     List<MoveRecord> getGameDetails(String gameId) throws IOException;
 
     GameIdResponse createGameRecord(String roomCode) throws IOException;
