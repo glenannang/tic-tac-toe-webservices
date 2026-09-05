@@ -4,6 +4,7 @@ import com.svi.tictactoewebservice.dto.request.PlayerRequest;
 import com.svi.tictactoewebservice.dto.response.ErrorResponse;
 import com.svi.tictactoewebservice.dto.response.GameListResponse;
 import com.svi.tictactoewebservice.service.impl.PlayerServiceImpl;
+import com.svi.tictactoewebservice.model.Room;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -63,4 +64,43 @@ public class PlayerController {
                     .build();
         }
     }
+
+    @GET
+    @Path("/{playerId}/rooms")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response listRooms(
+            @PathParam("playerId") String playerId,
+            PlayerRequest request
+    ) {
+        try {
+            List<Room> rooms = playerService.getPlayerRooms(playerId);
+
+            if (rooms.isEmpty()) {
+                return Response.status(402)
+                        .entity(new ErrorResponse("Record not found"))
+                        .build();
+            }
+
+            return Response.ok(rooms).build();
+
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new ErrorResponse(e.getMessage()))
+                    .build();
+
+        } catch (IOException e) {
+            return Response.status(500)
+                    .entity(new ErrorResponse(
+                            "The server ran into an unexpected exception."
+                    ))
+                    .build();
+        }
+    }
+
+
+
+
+
+
 }

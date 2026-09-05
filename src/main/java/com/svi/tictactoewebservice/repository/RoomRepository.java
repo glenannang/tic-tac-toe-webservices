@@ -67,4 +67,35 @@ public class RoomRepository {
 
         return room;
     }
+
+    public List<Room> findAllRooms() throws IOException {
+        List<Room> rooms = new ArrayList<>();
+
+        if (!roomsFolder.exists()) {
+            return rooms;
+        }
+
+        File[] roomFiles = roomsFolder.listFiles(
+                (dir, name) -> name.endsWith(".txt")
+        );
+
+        if (roomFiles == null) {
+            return rooms;
+        }
+
+        for (File roomFile : roomFiles) {
+            String fileName = roomFile.getName();
+            String roomCode = fileName.substring(0, fileName.length() - 4);
+
+            Room room = findRoom(roomCode);
+
+            if (room != null) {
+                rooms.add(room);
+            }
+        }
+
+        return rooms;
+    }
+
+
 }
