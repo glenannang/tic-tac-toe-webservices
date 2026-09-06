@@ -1,10 +1,13 @@
 package com.svi.tictactoewebservice.service.impl;
 
+import com.svi.tictactoewebservice.dto.response.GameListResponse;
+import com.svi.tictactoewebservice.dto.response.RoomListResponse;
 import com.svi.tictactoewebservice.repository.GameRepository;
 import com.svi.tictactoewebservice.repository.RoomRepository;
 import com.svi.tictactoewebservice.service.PlayerService;
 import com.svi.tictactoewebservice.validator.IdValidator;
 import com.svi.tictactoewebservice.model.Room;
+import com.svi.tictactoewebservice.dto.response.RoomResponse;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,21 +20,34 @@ public class PlayerServiceImpl implements PlayerService {
     private final IdValidator idValidator = new IdValidator();
 
     @Override
-    public List<String> getPlayerGames(String playerId) throws IOException {
+    public GameListResponse getPlayerGames(String playerId) throws IOException {
         idValidator.validatePlayerId(playerId);
-        return gameRepository.findGamesByPlayerId(playerId);
+
+        List<String> games = gameRepository.findGamesByPlayerId(playerId);
+
+        if (games == null) {
+            return null;
+        }
+
+        List<GameListResponse.GameId> gameList = new ArrayList<>();
+
+        for (String gameId : games) {
+            gameList.add(new GameListResponse.GameId(gameId));
+        }
+
+        return new GameListResponse(gameList, "Records found");
     }
 
     @Override
-    public List<Room> getPlayerRooms(String playerId) throws IOException {
+    public RoomListResponse getPlayerRooms(String playerId) throws IOException  {
         idValidator.validatePlayerId(playerId);
 
         List<String> playerGames = gameRepository.findGamesByPlayerId(playerId);
         List<Room> allRooms = roomRepository.findAllRooms();
-        List<Room> playerRooms = new ArrayList<>();
+        List<RoomResponse> roomList = new ArrayList<>();
 
         if (playerGames == null) {
-            return playerRooms;
+            return null;
         }
 
         for (Room room : allRooms) {
@@ -44,13 +60,10 @@ public class PlayerServiceImpl implements PlayerService {
             }
 
             if (!matchingGames.isEmpty()) {
-                Room playerRoom = new Room();
-                playerRoom.setRoomCode(room.getRoomCode());
-                playerRoom.setGameIds(matchingGames);
-                playerRooms.add(playerRoom);
+                roomList.add(new RoomResponse(room.getRoomCode(), matchingGames));
             }
         }
 
-        return playerRooms;
+        return new RoomListResponse(roomList, "Records found");
     }
 }

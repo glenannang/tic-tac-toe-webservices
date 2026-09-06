@@ -27,6 +27,7 @@ public class GameController {
 
     private final GameServiceImpl gameService = new GameServiceImpl();
 
+    // Saves a player's move in a game
     @POST
     @Path("save")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -34,8 +35,8 @@ public class GameController {
     public Response save(MoveRequest request) {
 
         try {
-            gameService.saveMove(request);
-            return Response.ok(new ApiResponse("Record saved.")).build();
+            ApiResponse response = gameService.saveMove(request);
+            return Response.ok(response).build();
 
         }
         catch (IllegalArgumentException e){
@@ -49,7 +50,7 @@ public class GameController {
         }
     }
 
-
+    // Retrieves all move records for a specific game
     @GET
     @Path("/{gameId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -57,13 +58,13 @@ public class GameController {
     public Response getGame(@PathParam("gameId") String gameId, GameRequest request) {
 
         try {
-            List<MoveRecord> moves = gameService.getGameDetails(gameId);
+            GameDetailsResponse response = gameService.getGameDetails(gameId);
 
-            if (moves == null) {
+            if (response == null) {
                 return Response.status(402).entity(new ErrorResponse("Record not found")).build();
             }
 
-            return Response.ok(new GameDetailsResponse(moves, "Records found")).build();
+            return Response.ok(response).build();
 
         } catch(IllegalArgumentException e){
             return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorResponse(e.getMessage())).build();

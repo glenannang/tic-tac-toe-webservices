@@ -1,13 +1,14 @@
 package com.svi.tictactoewebservice.service;
 
 import com.svi.tictactoewebservice.dto.request.RoomRequest;
+import com.svi.tictactoewebservice.dto.response.ApiResponse;
 import com.svi.tictactoewebservice.dto.response.RoomResponse;
 
 import java.io.IOException;
 
 public interface RoomService {
 
-    RoomResponse createRoom(RoomRequest request) throws IOException;
+    ApiResponse createRoom(RoomRequest request) throws IOException;
 
     RoomResponse getRoom(String roomCode) throws IOException;
 

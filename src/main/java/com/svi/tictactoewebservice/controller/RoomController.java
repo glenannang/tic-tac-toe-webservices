@@ -23,13 +23,15 @@ public class RoomController {
     private final GameServiceImpl gameService = new GameServiceImpl();
     private final RoomServiceImpl roomService = new RoomServiceImpl();
 
+
+    // Creates a new room record.
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createRoom(RoomRequest request) {
         try {
-            roomService.createRoom(request);
-            return Response.status(Response.Status.CREATED).entity(new ApiResponse("Room record created.")).build();
+            ApiResponse response = roomService.createRoom(request);
+            return Response.status(Response.Status.CREATED).entity(response).build();
 
         } catch (IOException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ErrorResponse("Failed to create room.")).build();
@@ -39,6 +41,7 @@ public class RoomController {
         }
     }
 
+    // Creates a new game and associates it with the specified room
     @POST
     @Path("/{roomCode}/games")
     @Produces(MediaType.APPLICATION_JSON)
@@ -58,10 +61,11 @@ public class RoomController {
         }
     }
 
+    // Retrieves the specified room and all games created within it
     @GET
-    @Path("/{roomId}")
+    @Path("/{roomCode}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getRoom(@PathParam("roomId") String roomId){
+    public Response getRoom(@PathParam("roomCode") String roomId){
         try {
             RoomResponse roomResponse = roomService.getRoom(roomId);
 

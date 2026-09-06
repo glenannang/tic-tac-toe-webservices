@@ -1,6 +1,7 @@
 package com.svi.tictactoewebservice.service.impl;
 
 import com.svi.tictactoewebservice.dto.request.RoomRequest;
+import com.svi.tictactoewebservice.dto.response.ApiResponse;
 import com.svi.tictactoewebservice.dto.response.RoomResponse;
 import com.svi.tictactoewebservice.model.Room;
 import com.svi.tictactoewebservice.repository.RoomRepository;
@@ -16,7 +17,7 @@ public class RoomServiceImpl implements RoomService {
     private final IdValidator idValidator = new IdValidator();
 
     @Override
-    public RoomResponse createRoom(RoomRequest request) throws IOException {
+    public ApiResponse createRoom(RoomRequest request) throws IOException {
 
         idValidator.validateRoomId(request.getRoomCode());
 
@@ -24,7 +25,7 @@ public class RoomServiceImpl implements RoomService {
         room.setRoomCode(request.getRoomCode());
         roomRepository.createRoom(room);
 
-        return new RoomResponse(room.getRoomCode(),room.getGameIds());
+        return new ApiResponse("Room record created.");
     }
 
     @Override

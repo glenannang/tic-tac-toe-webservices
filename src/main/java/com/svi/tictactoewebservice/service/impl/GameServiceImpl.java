@@ -1,5 +1,6 @@
 package com.svi.tictactoewebservice.service.impl;
 import com.svi.tictactoewebservice.dto.request.MoveRequest;
+import com.svi.tictactoewebservice.dto.response.ApiResponse;
 import com.svi.tictactoewebservice.model.MoveRecord;
 import com.svi.tictactoewebservice.repository.GameRepository;
 import com.svi.tictactoewebservice.service.GameService;
@@ -8,6 +9,8 @@ import com.svi.tictactoewebservice.validator.MoveRequestValidator;
 import com.svi.tictactoewebservice.dto.response.GameIdResponse;
 import com.svi.tictactoewebservice.dto.response.RoomResponse;
 import com.svi.tictactoewebservice.validator.MoveValidator;
+import com.svi.tictactoewebservice.dto.response.GameDetailsResponse;
+
 
 
 import java.io.IOException;
@@ -24,7 +27,7 @@ public class GameServiceImpl implements GameService {
     private final MoveValidator moveValidator = new MoveValidator();
 
     @Override
-    public void saveMove(MoveRequest request) throws IOException {
+    public ApiResponse saveMove(MoveRequest request) throws IOException {
 
         moveRequestValidator.validate(request);
 
@@ -42,13 +45,21 @@ public class GameServiceImpl implements GameService {
         record.setDatesave(LocalDateTime.now().format(formatter));
 
         gameRepository.saveMove(record);
+        return new ApiResponse("Record saved.");
     }
 
 
     @Override
-    public List<MoveRecord> getGameDetails(String gameId) throws IOException {
+    public GameDetailsResponse getGameDetails(String gameId) throws IOException {
         idValidator.validateGameId(gameId);
-        return gameRepository.findMovesByGameId(gameId);
+
+        List<MoveRecord> moves = gameRepository.findMovesByGameId(gameId);
+
+        if (moves == null) {
+            return null;
+        }
+
+        return new GameDetailsResponse(moves, "Records found");
     }
 
     @Override
