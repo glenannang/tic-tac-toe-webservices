@@ -4,6 +4,7 @@ import com.svi.tictactoewebservice.dto.request.PlayerRequest;
 import com.svi.tictactoewebservice.dto.response.ErrorResponse;
 import com.svi.tictactoewebservice.dto.response.GameListResponse;
 import com.svi.tictactoewebservice.dto.response.RoomListResponse;
+import com.svi.tictactoewebservice.service.PlayerService;
 import com.svi.tictactoewebservice.service.impl.PlayerServiceImpl;
 
 import javax.ws.rs.Consumes;
@@ -20,7 +21,7 @@ import java.io.IOException;
 @Path("/player")
 public class PlayerController {
 
-    private final PlayerServiceImpl playerService = new PlayerServiceImpl();
+    private final PlayerService playerService = new PlayerServiceImpl();
 
     // Retrieves all games participated in by a player
     @GET

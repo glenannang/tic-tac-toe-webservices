@@ -4,6 +4,7 @@ import com.svi.tictactoewebservice.dto.request.GameRequest;
 import com.svi.tictactoewebservice.dto.request.MoveRequest;
 
 import com.svi.tictactoewebservice.dto.response.*;
+import com.svi.tictactoewebservice.service.GameService;
 import com.svi.tictactoewebservice.service.impl.GameServiceImpl;
 import com.svi.tictactoewebservice.model.MoveRecord;
 
@@ -25,7 +26,7 @@ import java.util.List;
 @Path("/game")
 public class GameController {
 
-    private final GameServiceImpl gameService = new GameServiceImpl();
+    private final GameService gameService = new GameServiceImpl();
 
     // Saves a player's move in a game
     @POST

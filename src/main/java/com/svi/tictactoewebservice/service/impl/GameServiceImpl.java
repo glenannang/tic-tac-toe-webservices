@@ -35,6 +35,7 @@ public class GameServiceImpl implements GameService {
 
         moveValidator.validate(request, existingMoves);
 
+        //convert move request to moverecord
         MoveRecord record = new MoveRecord();
         record.setGameid(request.getGameid());
         record.setPlayerid(request.getPlayerid());

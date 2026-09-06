@@ -2,6 +2,8 @@ package com.svi.tictactoewebservice.controller;
 
 import com.svi.tictactoewebservice.dto.request.RoomRequest;
 import com.svi.tictactoewebservice.dto.response.*;
+import com.svi.tictactoewebservice.service.GameService;
+import com.svi.tictactoewebservice.service.RoomService;
 import com.svi.tictactoewebservice.service.impl.GameServiceImpl;
 import com.svi.tictactoewebservice.service.impl.RoomServiceImpl;
 
@@ -20,8 +22,8 @@ import java.io.IOException;
 @Path("/room")
 public class RoomController {
 
-    private final GameServiceImpl gameService = new GameServiceImpl();
-    private final RoomServiceImpl roomService = new RoomServiceImpl();
+    private final GameService gameService = new GameServiceImpl();
+    private final RoomService roomService = new RoomServiceImpl();
 
 
     // Creates a new room record.
