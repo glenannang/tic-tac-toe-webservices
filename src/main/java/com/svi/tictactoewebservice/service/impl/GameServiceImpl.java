@@ -7,6 +7,7 @@ import com.svi.tictactoewebservice.validator.IdValidator;
 import com.svi.tictactoewebservice.validator.MoveRequestValidator;
 import com.svi.tictactoewebservice.dto.response.GameIdResponse;
 import com.svi.tictactoewebservice.dto.response.RoomResponse;
+import com.svi.tictactoewebservice.validator.MoveValidator;
 
 
 import java.io.IOException;
@@ -16,15 +17,20 @@ import java.util.List;
 import java.util.UUID;
 
 public class GameServiceImpl implements GameService {
-    private final GameRepository gameRepository = new GameRepository();
-    private final MoveRequestValidator moveRequestValidator = new MoveRequestValidator();
-    private final IdValidator idValidator = new IdValidator();
     private final RoomServiceImpl roomService = new RoomServiceImpl();
+    private final GameRepository gameRepository = new GameRepository();
+    private final IdValidator idValidator = new IdValidator();
+    private final MoveRequestValidator moveRequestValidator = new MoveRequestValidator();
+    private final MoveValidator moveValidator = new MoveValidator();
 
     @Override
     public void saveMove(MoveRequest request) throws IOException {
 
         moveRequestValidator.validate(request);
+
+        List<MoveRecord> existingMoves = gameRepository.findMovesByGameId(request.getGameid());
+
+        moveValidator.validate(request, existingMoves);
 
         MoveRecord record = new MoveRecord();
         record.setGameid(request.getGameid());
