@@ -2,11 +2,9 @@ package com.svi.tictactoewebservice.repository;
 
 import com.svi.tictactoewebservice.config.Config;
 import com.svi.tictactoewebservice.model.Room;
-
-import java.io.BufferedReader;
+import com.svi.tictactoewebservice.service.FileStorageService;
+import com.svi.tictactoewebservice.service.impl.FileStorageServiceImpl;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,18 +12,14 @@ import java.util.List;
 public class RoomRepository {
 
     private final File roomsFolder = new File(Config.get(Config.Keys.RECORDS_DIR.value()), Config.get(Config.Keys.ROOM_DIR.value()));
+    private final FileStorageService fileStorageService = new FileStorageServiceImpl();
 
     public void createRoom(Room room) throws IOException {
 
-        if (!roomsFolder.exists()) {
-            roomsFolder.mkdirs();
-        }
-
+        fileStorageService.createDirectory(roomsFolder);
         File roomFile = new File(roomsFolder, room.getRoomCode() + ".txt");
+        fileStorageService.createFile(roomFile);
 
-        if (!roomFile.exists()) {
-            roomFile.createNewFile();
-        }
     }
 
     public void addGameToRoom(String roomCode, String gameId) throws IOException {
@@ -36,10 +30,7 @@ public class RoomRepository {
             throw new IOException("Room does not exist.");
         }
 
-        try (FileWriter writer = new FileWriter(roomFile, true)) {
-            writer.write(gameId);
-            writer.write(System.lineSeparator());
-        }
+        fileStorageService.appendLine(roomFile, gameId);
     }
 
     public Room findRoom(String roomCode) throws IOException {
@@ -50,15 +41,12 @@ public class RoomRepository {
             return null;
         }
 
+        List<String> lines = fileStorageService.readLines(roomFile);
         List<String> gameIds = new ArrayList<>();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(roomFile))) {
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (!line.trim().isEmpty()) {
-                    gameIds.add(line.trim());
-                }
+        for (String line : lines) {
+            if (!line.trim().isEmpty()) {
+                gameIds.add(line.trim());
             }
         }
 
@@ -97,6 +85,5 @@ public class RoomRepository {
 
         return rooms;
     }
-
 
 }
