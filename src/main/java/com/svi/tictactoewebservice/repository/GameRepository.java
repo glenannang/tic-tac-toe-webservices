@@ -1,6 +1,7 @@
 package com.svi.tictactoewebservice.repository;
 
 import com.svi.tictactoewebservice.model.MoveRecord;
+import com.svi.tictactoewebservice.config.Config;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,22 +13,27 @@ import java.util.List;
 
 public class GameRepository {
 
-    private final File recordsFolder = new File("records");
+    private final File playerFolder = new File(
+            Config.get(Config.Keys.RECORDS_DIR.value()),
+            Config.get(Config.Keys.PLAYER_DIR.value())
+    );
+
+    private final File gameFolder = new File(
+            Config.get(Config.Keys.RECORDS_DIR.value()),
+            Config.get(Config.Keys.GAME_DIR.value())
+    );
 
     public void saveMove(MoveRecord record) throws IOException {
 
-        if (!recordsFolder.exists()) {
-            recordsFolder.mkdir();
+        if (!playerFolder.exists()) {
+            playerFolder.mkdirs();
         }
 
-        File playerFile = new File(
-                recordsFolder,
-                record.getPlayerid() + ".txt"
-        );
-
-        if (!playerFile.exists()) {
-            playerFile.createNewFile();
+        if (!gameFolder.exists()) {
+            gameFolder.mkdirs();
         }
+
+        File playerFile = new File(playerFolder, record.getPlayerid() + ".txt");
 
         if (!playerFile.exists()) {
             playerFile.createNewFile();
@@ -53,10 +59,7 @@ public class GameRepository {
             }
         }
 
-        File gameFile = new File(
-                recordsFolder,
-                record.getGameid() + ".txt"
-        );
+        File gameFile = new File(gameFolder, record.getGameid() + ".txt");
 
         if (!gameFile.exists()) {
             gameFile.createNewFile();
@@ -77,7 +80,7 @@ public class GameRepository {
 
     public List<String> findGamesByPlayerId(String playerId) throws IOException {
 
-        File playerFile = new File(recordsFolder, playerId + ".txt");
+        File playerFile = new File(playerFolder, playerId + ".txt");
 
         if (!playerFile.exists()) {
             return null;
@@ -100,7 +103,7 @@ public class GameRepository {
 
     public List<MoveRecord> findMovesByGameId(String gameId) throws IOException {
 
-        File gameFile = new File(recordsFolder, gameId + ".txt");
+        File gameFile = new File(gameFolder, gameId + ".txt");
 
         if (!gameFile.exists()) {
             return null;

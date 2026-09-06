@@ -1,5 +1,6 @@
 package com.svi.tictactoewebservice.repository;
 
+import com.svi.tictactoewebservice.config.Config;
 import com.svi.tictactoewebservice.model.Room;
 
 import java.io.BufferedReader;
@@ -12,7 +13,7 @@ import java.util.List;
 
 public class RoomRepository {
 
-    private final File roomsFolder = new File("records", "rooms");
+    private final File roomsFolder = new File(Config.get(Config.Keys.RECORDS_DIR.value()), Config.get(Config.Keys.ROOM_DIR.value()));
 
     public void createRoom(Room room) throws IOException {
 
