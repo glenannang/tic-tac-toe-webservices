@@ -15,11 +15,13 @@ public class MoveValidator {
             return;
         }
 
+        validateGameNotFinished(existingMoves); //check first if the game is finished before processing move
         validateLocationAvailable(request, existingMoves);
         validateTurn(request, existingMoves);
         validatePlayerLimit(request,existingMoves);
         validatePlayerSymbol(request, existingMoves);
         validateSymbolOwner(request, existingMoves);
+
     }
 
     private void validateFirstMove(MoveRequest request) {
@@ -78,4 +80,48 @@ public class MoveValidator {
 
         }
     }
+
+    private void validateGameNotFinished(List<MoveRecord> existingMoves) {
+
+        String[] board = new String[9];
+
+        for (MoveRecord move : existingMoves) {
+            int location = Integer.parseInt(move.getLocation());
+            board[location] = move.getSymbol();
+        }
+
+        if (hasWinner(board) || existingMoves.size() >= 9) {
+            throw new IllegalArgumentException("Game is already finished.");
+        }
+
+    }
+
+    private boolean hasWinner(String[] board) {
+
+        int[][] winningCombinations = {
+                {0, 1, 2},
+                {3, 4, 5},
+                {6, 7, 8},
+                {0, 3, 6},
+                {1, 4, 7},
+                {2, 5, 8},
+                {0, 4, 8},
+                {2, 4, 6}
+        };
+
+        for (int[] combination : winningCombinations) {
+
+            int first = combination[0];
+            int second = combination[1];
+            int third = combination[2];
+
+            if (board[first] != null && board[first].equals(board[second]) && board[first].equals(board[third])) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
 }
