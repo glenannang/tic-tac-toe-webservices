@@ -9,6 +9,10 @@ public class IdValidator {
             throw new IllegalArgumentException("Game ID is required.");
         }
 
+        if (!gameId.matches("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")) {
+            throw new IllegalArgumentException("Game ID must be a valid UUID.");
+        }
+
         try {
             UUID.fromString(gameId);
         } catch (IllegalArgumentException e) {
@@ -20,6 +24,9 @@ public class IdValidator {
     public void validatePlayerId(String playerId) {
         if (playerId == null || playerId.trim().isEmpty()) {
             throw new IllegalArgumentException("Player ID is required.");
+        }
+        if (!playerId.matches("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")) {
+            throw new IllegalArgumentException("Player ID must be a valid UUID.");
         }
 
         try {
