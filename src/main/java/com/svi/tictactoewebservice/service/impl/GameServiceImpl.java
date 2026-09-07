@@ -22,18 +22,18 @@ import java.util.UUID;
 public class GameServiceImpl implements GameService {
     private final RoomServiceImpl roomService = new RoomServiceImpl();
     private final GameRepository gameRepository = new GameRepository();
-    private final IdValidator idValidator = new IdValidator();
+    //private final IdValidator idValidator = new IdValidator();
     private final MoveRequestValidator moveRequestValidator = new MoveRequestValidator();
     private final MoveValidator moveValidator = new MoveValidator();
 
     @Override
     public ApiResponse saveMove(MoveRequest request) throws IOException {
 
-        moveRequestValidator.validate(request);
+        //moveRequestValidator.validate(request); //can throw IllegalArgumentException
 
-        List<MoveRecord> existingMoves = gameRepository.findMovesByGameId(request.getGameid());
+        List<MoveRecord> existingMoves = gameRepository.findMovesByGameId(request.getGameid());//can throw IOException
 
-        moveValidator.validate(request, existingMoves);
+        moveValidator.validate(request, existingMoves); //can throw IllegalArgumentException
 
         //convert move request to moverecord
         MoveRecord record = new MoveRecord();
@@ -45,14 +45,14 @@ public class GameServiceImpl implements GameService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         record.setDatesave(LocalDateTime.now().format(formatter));
 
-        gameRepository.saveMove(record);
+        gameRepository.saveMove(record); //can throw IO exception
         return new ApiResponse("Record saved.");
     }
 
 
     @Override
     public GameDetailsResponse getGameDetails(String gameId) throws IOException {
-        idValidator.validateGameId(gameId);
+        //idValidator.validateGameId(gameId);
 
         List<MoveRecord> moves = gameRepository.findMovesByGameId(gameId);
 

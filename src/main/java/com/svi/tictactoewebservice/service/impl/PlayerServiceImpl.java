@@ -17,11 +17,11 @@ public class PlayerServiceImpl implements PlayerService {
 
     private final GameRepository gameRepository = new GameRepository();
     private final RoomRepository roomRepository = new RoomRepository();
-    private final IdValidator idValidator = new IdValidator();
+    //private final IdValidator idValidator = new IdValidator();
 
     @Override
     public GameListResponse getPlayerGames(String playerId) throws IOException {
-        idValidator.validatePlayerId(playerId);
+        //idValidator.validatePlayerId(playerId);
 
         List<String> games = gameRepository.findGamesByPlayerId(playerId);
 
@@ -40,7 +40,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public RoomListResponse getPlayerRooms(String playerId) throws IOException  {
-        idValidator.validatePlayerId(playerId);
+        //idValidator.validatePlayerId(playerId);
 
         List<String> playerGames = gameRepository.findGamesByPlayerId(playerId);
         List<Room> allRooms = roomRepository.findAllRooms();

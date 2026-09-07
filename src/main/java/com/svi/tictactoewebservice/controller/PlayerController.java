@@ -6,6 +6,8 @@ import com.svi.tictactoewebservice.dto.response.RoomListResponse;
 import com.svi.tictactoewebservice.service.PlayerService;
 import com.svi.tictactoewebservice.service.impl.PlayerServiceImpl;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -25,7 +27,13 @@ public class PlayerController {
     @GET
     @Path("/{playerId}/games")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listGames(@PathParam("playerId") String playerId) {
+    public Response listGames(@PathParam("playerId")
+                              @NotBlank(message = "Player ID is required.")
+                              @Pattern(
+                                      regexp = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+                                      message = "Player ID must be a valid UUID."
+                              )
+                              String playerId) {
 
         try {
             GameListResponse response = playerService.getPlayerGames(playerId);
@@ -55,7 +63,12 @@ public class PlayerController {
     @GET
     @Path("/{playerId}/rooms")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listRooms(@PathParam("playerId") String playerId) {
+    public Response listRooms(@PathParam("playerId")
+                              @NotBlank(message = "Player ID is required.")
+                              @Pattern(regexp = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+                                       message = "Player ID must be a valid UUID.")
+                              String playerId) {
+
         try {
             RoomListResponse response = playerService.getPlayerRooms(playerId);
 

@@ -1,14 +1,13 @@
 package com.svi.tictactoewebservice.controller;
 
-
 import com.svi.tictactoewebservice.dto.request.MoveRequest;
-
 import com.svi.tictactoewebservice.dto.response.*;
 import com.svi.tictactoewebservice.service.GameService;
 import com.svi.tictactoewebservice.service.impl.GameServiceImpl;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
-
-
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.GET;
@@ -31,7 +30,7 @@ public class GameController {
     @Path("save")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response save(MoveRequest request) {
+    public Response save(@Valid MoveRequest request) {
 
         try {
             ApiResponse response = gameService.saveMove(request);
@@ -53,7 +52,11 @@ public class GameController {
     @GET
     @Path("/{gameId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getGame(@PathParam("gameId") String gameId) {
+    public Response getGame(@PathParam("gameId")
+                            @NotBlank(message = "Game ID is required.")
+                            @Pattern(regexp = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+                                     message = "Game ID must be a valid UUID.")
+                            String gameId) {
 
         try {
             GameDetailsResponse response = gameService.getGameDetails(gameId);
