@@ -1,12 +1,12 @@
 package com.svi.tictactoewebservice.controller;
 
-import com.svi.tictactoewebservice.dto.request.GameRequest;
+
 import com.svi.tictactoewebservice.dto.request.MoveRequest;
 
 import com.svi.tictactoewebservice.dto.response.*;
 import com.svi.tictactoewebservice.service.GameService;
 import com.svi.tictactoewebservice.service.impl.GameServiceImpl;
-import com.svi.tictactoewebservice.model.MoveRecord;
+
 
 
 import javax.ws.rs.Consumes;
@@ -20,8 +20,6 @@ import javax.ws.rs.core.Response;
 
 import java.io.IOException;
 
-
-import java.util.List;
 
 @Path("/game")
 public class GameController {
@@ -54,9 +52,8 @@ public class GameController {
     // Retrieves all move records for a specific game
     @GET
     @Path("/{gameId}")
-    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getGame(@PathParam("gameId") String gameId, GameRequest request) {
+    public Response getGame(@PathParam("gameId") String gameId) {
 
         try {
             GameDetailsResponse response = gameService.getGameDetails(gameId);

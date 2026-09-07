@@ -1,13 +1,11 @@
 package com.svi.tictactoewebservice.controller;
 
-import com.svi.tictactoewebservice.dto.request.PlayerRequest;
 import com.svi.tictactoewebservice.dto.response.ErrorResponse;
 import com.svi.tictactoewebservice.dto.response.GameListResponse;
 import com.svi.tictactoewebservice.dto.response.RoomListResponse;
 import com.svi.tictactoewebservice.service.PlayerService;
 import com.svi.tictactoewebservice.service.impl.PlayerServiceImpl;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -26,9 +24,8 @@ public class PlayerController {
     // Retrieves all games participated in by a player
     @GET
     @Path("/{playerId}/games")
-    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listGames(@PathParam("playerId") String playerId, PlayerRequest request) {
+    public Response listGames(@PathParam("playerId") String playerId) {
 
         try {
             GameListResponse response = playerService.getPlayerGames(playerId);
@@ -57,9 +54,8 @@ public class PlayerController {
     // Retrieves all rooms participated in by the specified player, including their games in each room
     @GET
     @Path("/{playerId}/rooms")
-    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listRooms(@PathParam("playerId") String playerId, PlayerRequest request) {
+    public Response listRooms(@PathParam("playerId") String playerId) {
         try {
             RoomListResponse response = playerService.getPlayerRooms(playerId);
 
