@@ -35,7 +35,8 @@ public class RoomController {
 
     private GameService gameService;
 
-    private final RoomService roomService = new RoomServiceImpl();
+    //private final RoomService roomService = new RoomServiceImpl();
+    private RoomService roomService;
 
     @PostConstruct
     public void initialize() {
@@ -47,6 +48,9 @@ public class RoomController {
 
         this.gameService =
                 new GameServiceImpl(cassandraRepository);
+
+        this.roomService =
+                new RoomServiceImpl(cassandraRepository);
     }
 
 

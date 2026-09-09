@@ -6,6 +6,9 @@ import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
 import com.svi.tictactoewebservice.config.ConfigLoader;
 import com.svi.tictactoewebservice.model.MoveRecord;
+import com.svi.tictactoewebservice.model.Room;
+
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -21,6 +24,15 @@ public class CassandraRepository {
     private final PreparedStatement findMovesByGameIdStatement;
     private final PreparedStatement insertPlayerGameStatement;
     private final PreparedStatement findGamesByPlayerIdStatement;
+    private final PreparedStatement findRoomByCodeStatement;
+    private final PreparedStatement insertRoomGameStatement;
+    private final PreparedStatement findGamesByRoomCodeStatement;
+    private final PreparedStatement findAllRoomsStatement;
+
+
+
+
+    private final PreparedStatement insertRoomStatement;
 
 
     public CassandraRepository(Session session) {
@@ -28,8 +40,11 @@ public class CassandraRepository {
         ConfigLoader config = ConfigLoader.getInstance();
         String tableName = config.getCassandraTable();
         String playerGamesTable = config.getPlayerGamesTable();
+        String roomsTable = config.getRoomsTable();
+        String roomGamesTable = config.getRoomGamesTable();
 
-        this.insertPlayerGameStatement = session.prepare(
+
+        this.insertPlayerGameStatement = this.session.prepare(
                 "INSERT INTO " + playerGamesTable +
                         " (player_id, date_saved, game_id) VALUES (?, ?, ?)"
         );
@@ -40,7 +55,7 @@ public class CassandraRepository {
                         "VALUES (?, ?, ?, ?, ?)"
         );
 
-        this.findGamesByPlayerIdStatement = session.prepare(
+        this.findGamesByPlayerIdStatement = this.session.prepare(
                 "SELECT game_id, date_saved FROM " + playerGamesTable +
                         " WHERE player_id = ?"
         );
@@ -49,8 +64,34 @@ public class CassandraRepository {
                 "SELECT * FROM " + tableName + " WHERE game_id = ?"
         );
 
+        this.insertRoomStatement = session.prepare("INSERT INTO " + roomsTable + " (room_code) VALUES (?)"
+        );
+
+
+        this.insertRoomGameStatement = session.prepare(
+                "INSERT INTO " + roomGamesTable +
+                        " (room_code, date_saved, game_id) VALUES (?, ?, ?)"
+        );
+
+        this.findRoomByCodeStatement = session.prepare(
+                "SELECT room_code FROM " + roomsTable +
+                        " WHERE room_code = ?"
+        );
+        this.findGamesByRoomCodeStatement = session.prepare(
+                "SELECT game_id FROM " + roomGamesTable +
+                        " WHERE room_code = ?"
+        );
+        this.findAllRoomsStatement = session.prepare(
+                "SELECT room_code FROM " + roomsTable
+        );
+
+
 
     }
+
+
+
+
     //for saving moves
     public void saveMove(MoveRecord record) {
         UUID gameId = UUID.fromString(record.getGameid());
@@ -136,6 +177,81 @@ public class CassandraRepository {
         }
 
         return gameIds;
+    }
+
+    public void createRoom(String roomCode) {
+        session.execute( insertRoomStatement.bind(roomCode)
+        );
+    }
+
+    public boolean roomExists(String roomCode) {
+
+        Row row = session.execute(findRoomByCodeStatement.bind(roomCode)).one();
+        return row != null;
+    }
+
+    public void addGameToRoom(String roomCode, String gameId) throws IOException {
+
+        if (!roomExists(roomCode)) {
+            throw new IOException("Room does not exist.");
+        }
+
+        UUID gameUuid = UUID.fromString(gameId);
+        Date dateSaved = new Date();
+
+        session.execute(
+                insertRoomGameStatement.bind(
+                        roomCode,
+                        dateSaved,
+                        gameUuid
+                )
+        );
+    }
+
+    public Room findRoom(String roomCode) {
+
+        Row roomRow = session.execute(
+                findRoomByCodeStatement.bind(roomCode)
+        ).one();
+
+        if (roomRow == null) {
+            return null;
+        }
+
+        ResultSet resultSet = session.execute(
+                findGamesByRoomCodeStatement.bind(roomCode)
+        );
+
+        List<String> gameIds = new ArrayList<>();
+
+        for (Row row : resultSet) {
+            gameIds.add(row.getUUID("game_id").toString());
+        }
+
+        Room room = new Room();
+        room.setRoomCode(roomCode);
+        room.setGameIds(gameIds);
+
+        return room;
+    }
+
+    public List<Room> findAllRooms() {
+
+        ResultSet resultSet = session.execute(findAllRoomsStatement.bind());
+
+        List<Room> rooms = new ArrayList<>();
+
+        for (Row row : resultSet) {
+            String roomCode = row.getString("room_code");
+
+            Room room = findRoom(roomCode);
+
+            if (room != null) {
+                rooms.add(room);
+            }
+        }
+
+        return rooms;
     }
 
 

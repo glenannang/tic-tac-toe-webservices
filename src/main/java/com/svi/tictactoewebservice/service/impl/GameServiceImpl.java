@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class GameServiceImpl implements GameService {
-    private final RoomServiceImpl roomService = new RoomServiceImpl();
+    private final RoomServiceImpl roomService;
     private final GameRepository gameRepository = new GameRepository();
     private final CassandraRepository cassandraGameRepository;
     private final MoveRequestValidator moveRequestValidator = new MoveRequestValidator();
@@ -25,6 +25,7 @@ public class GameServiceImpl implements GameService {
 
     public GameServiceImpl(CassandraRepository cassandraGameRepository) {
         this.cassandraGameRepository = cassandraGameRepository;
+        this.roomService = new RoomServiceImpl(cassandraGameRepository);
     }
 
     @Override

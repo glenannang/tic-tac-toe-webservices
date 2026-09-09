@@ -48,10 +48,12 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public RoomListResponse getPlayerRooms(String playerId) throws IOException  {
-        //idValidator.validatePlayerId(playerId);
 
-        List<String> playerGames = gameRepository.findGamesByPlayerId(playerId);
-        List<Room> allRooms = roomRepository.findAllRooms();
+        //List<String> playerGames = gameRepository.findGamesByPlayerId(playerId);
+        List<String> playerGames = cassandraRepository.findGamesByPlayerId(playerId);
+        //List<Room> allRooms = roomRepository.findAllRooms();
+        List<Room> allRooms = cassandraRepository.findAllRooms();
+
         List<RoomResponse> roomList = new ArrayList<>();
 
         if (playerGames == null) {
