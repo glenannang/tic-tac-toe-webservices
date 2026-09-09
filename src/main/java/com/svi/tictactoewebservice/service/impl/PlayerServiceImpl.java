@@ -17,12 +17,14 @@ public class PlayerServiceImpl implements PlayerService {
 
     private final GameRepository gameRepository = new GameRepository();
     private final RoomRepository roomRepository = new RoomRepository();
+
     //private final IdValidator idValidator = new IdValidator();
 
     @Override
     public GameListResponse getPlayerGames(String playerId) throws IOException {
         //idValidator.validatePlayerId(playerId);
 
+        //List<String> games = gameRepository.findGamesByPlayerId(playerId);
         List<String> games = gameRepository.findGamesByPlayerId(playerId);
 
         if (games == null) {

@@ -53,8 +53,7 @@ public class AppStartup implements ServletContextListener {
 
         CassandraRepository cassandraRepository =
                 new CassandraRepository(
-                        cassandraConnection.getSession(),
-                        config.getCassandraTable()
+                        cassandraConnection.getSession()
                 );
 
         context.setAttribute(

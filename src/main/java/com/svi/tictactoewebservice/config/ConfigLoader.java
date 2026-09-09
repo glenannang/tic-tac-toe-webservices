@@ -60,6 +60,10 @@ public final class ConfigLoader {
         return getRequired("CASSANDRA_TABLE");
     }
 
+    public String getPlayerGamesTable() {
+        return getRequired("PLAYER_GAMES_TABLE");
+    }
+
     private String getRequired(String key) {
         String value = properties.getProperty(key);
         if (value == null || value.trim().isEmpty()) {

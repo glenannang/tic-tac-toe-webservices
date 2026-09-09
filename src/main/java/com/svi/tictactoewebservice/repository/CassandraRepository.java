@@ -4,6 +4,7 @@ import com.datastax.driver.core.PreparedStatement;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
+import com.svi.tictactoewebservice.config.ConfigLoader;
 import com.svi.tictactoewebservice.model.MoveRecord;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -18,9 +19,20 @@ public class CassandraRepository {
     private final Session session;
     private final PreparedStatement insertMoveStatement;
     private final PreparedStatement findMovesByGameIdStatement;
+    private final PreparedStatement insertPlayerGameStatement;
+    private final PreparedStatement findGamesByPlayerIdStatement;
 
-    public CassandraRepository(Session session,String tableName) {
+
+    public CassandraRepository(Session session) {
         this.session = session;
+        ConfigLoader config = ConfigLoader.getInstance();
+        String tableName = config.getCassandraTable();
+        String playerGamesTable = config.getPlayerGamesTable();
+
+        this.insertPlayerGameStatement = session.prepare(
+                "INSERT INTO " + playerGamesTable +
+                        " (player_id, date_saved, game_id) VALUES (?, ?, ?)"
+        );
 
         this.insertMoveStatement = this.session.prepare(
                   "INSERT INTO " + tableName +
@@ -28,9 +40,15 @@ public class CassandraRepository {
                         "VALUES (?, ?, ?, ?, ?)"
         );
 
+        this.findGamesByPlayerIdStatement = session.prepare(
+                "SELECT game_id, date_saved FROM " + playerGamesTable +
+                        " WHERE player_id = ?"
+        );
+
         this.findMovesByGameIdStatement = this.session.prepare(
                 "SELECT * FROM " + tableName + " WHERE game_id = ?"
         );
+
 
     }
     //for saving moves
@@ -53,6 +71,15 @@ public class CassandraRepository {
                         playerId,
                         record.getSymbol(),
                         location
+                )
+        );
+
+        //duplicated player and game row
+        session.execute(
+                insertPlayerGameStatement.bind(
+                        playerId,
+                        dateSave,
+                        gameId
                 )
         );
     }
@@ -91,5 +118,28 @@ public class CassandraRepository {
         }
         return moves;
     }
+
+    public List<String> findGamesByPlayerId(String playerId) {
+
+        UUID playerUuid = UUID.fromString(playerId);
+
+        ResultSet resultSet = session.execute(
+                findGamesByPlayerIdStatement.bind(playerUuid)
+        );
+
+        List<String> gameIds = new ArrayList<>();
+
+        for (Row row : resultSet) {
+            gameIds.add(
+                    row.getUUID("game_id").toString()
+            );
+        }
+
+        return gameIds;
+    }
+
+
+
+
 
 }
