@@ -64,6 +64,14 @@ public final class ConfigLoader {
         return getRequired("PLAYER_GAMES_TABLE");
     }
 
+    public String getRoomGamesTable() {
+        return getRequired("ROOM_GAMES_TABLE");
+    }
+
+    public String getRoomsTable() {
+        return getRequired("ROOMS_TABLE");
+    }
+
     private String getRequired(String key) {
         String value = properties.getProperty(key);
         if (value == null || value.trim().isEmpty()) {

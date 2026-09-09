@@ -15,3 +15,14 @@ CREATE TABLE IF NOT EXISTS annang_player_games (
                                                    game_id uuid,
                                                    PRIMARY KEY (player_id, date_saved, game_id)
 ) WITH CLUSTERING ORDER BY (date_saved ASC);
+
+CREATE TABLE IF NOT EXISTS annang_room_games (
+                                                 room_code text,
+                                                 date_saved timestamp,
+                                                 game_id uuid,
+                                                 PRIMARY KEY (room_code, date_saved, game_id)
+) WITH CLUSTERING ORDER BY (date_saved ASC);
+
+CREATE TABLE IF NOT EXISTS annang_rooms (
+                                            room_code text PRIMARY KEY
+);
