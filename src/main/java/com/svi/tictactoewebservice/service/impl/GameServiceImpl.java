@@ -30,8 +30,8 @@ public class GameServiceImpl implements GameService {
     public ApiResponse saveMove(MoveRequest request) throws IOException {
 
            // List<MoveRecord> existingMoves = gameRepository.findMovesByGameId(request.getGameid());//can throw IOException
-
-           // moveValidator.validate(request, existingMoves); //can throw IllegalArgumentException
+            List<MoveRecord> existingMoves = cassandraGameRepository.findMovesByGameId(request.getGameid());
+            moveValidator.validate(request, existingMoves); //can throw IllegalArgumentException
 
             //convert move request to moverecord
             MoveRecord record = new MoveRecord();
