@@ -22,6 +22,7 @@ public class GameServiceImpl implements GameService {
     private final CassandraRepository cassandraGameRepository;
     private final MoveRequestValidator moveRequestValidator = new MoveRequestValidator();
     private final MoveValidator moveValidator = new MoveValidator();
+
     public GameServiceImpl(CassandraRepository cassandraGameRepository) {
         this.cassandraGameRepository = cassandraGameRepository;
     }

@@ -3,15 +3,20 @@ package com.svi.tictactoewebservice.controller;
 import com.svi.tictactoewebservice.dto.response.ErrorResponse;
 import com.svi.tictactoewebservice.dto.response.GameListResponse;
 import com.svi.tictactoewebservice.dto.response.RoomListResponse;
+import com.svi.tictactoewebservice.repository.CassandraRepository;
 import com.svi.tictactoewebservice.service.PlayerService;
 import com.svi.tictactoewebservice.service.impl.PlayerServiceImpl;
 
+
+import javax.annotation.PostConstruct;
+import javax.servlet.ServletContext;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -21,7 +26,21 @@ import java.io.IOException;
 @Path("/player")
 public class PlayerController {
 
-    private final PlayerService playerService = new PlayerServiceImpl();
+    @Context
+    private ServletContext servletContext;
+
+    @PostConstruct
+    public void initialize() {
+
+        CassandraRepository cassandraRepository =
+                (CassandraRepository) servletContext.getAttribute(
+                        "cassandraRepository"
+                );
+
+        this.playerService =
+                new PlayerServiceImpl(cassandraRepository);
+    }
+    private PlayerService playerService;
 
     // Retrieves all games participated in by a player
     @GET

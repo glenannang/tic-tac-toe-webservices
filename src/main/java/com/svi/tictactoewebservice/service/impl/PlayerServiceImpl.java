@@ -2,6 +2,7 @@ package com.svi.tictactoewebservice.service.impl;
 
 import com.svi.tictactoewebservice.dto.response.GameListResponse;
 import com.svi.tictactoewebservice.dto.response.RoomListResponse;
+import com.svi.tictactoewebservice.repository.CassandraRepository;
 import com.svi.tictactoewebservice.repository.GameRepository;
 import com.svi.tictactoewebservice.repository.RoomRepository;
 import com.svi.tictactoewebservice.service.PlayerService;
@@ -19,13 +20,18 @@ public class PlayerServiceImpl implements PlayerService {
     private final RoomRepository roomRepository = new RoomRepository();
 
     //private final IdValidator idValidator = new IdValidator();
+    private final CassandraRepository cassandraRepository;
+
+    public PlayerServiceImpl(CassandraRepository cassandraRepository) {
+        this.cassandraRepository = cassandraRepository;
+    }
+
+
 
     @Override
     public GameListResponse getPlayerGames(String playerId) throws IOException {
-        //idValidator.validatePlayerId(playerId);
-
         //List<String> games = gameRepository.findGamesByPlayerId(playerId);
-        List<String> games = gameRepository.findGamesByPlayerId(playerId);
+        List<String> games = cassandraRepository.findGamesByPlayerId(playerId);
 
         if (games == null) {
             return null;
