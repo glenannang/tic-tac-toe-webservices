@@ -90,8 +90,6 @@ public class CassandraRepository {
     }
 
 
-
-
     //for saving moves
     public void saveMove(MoveRecord record) {
         UUID gameId = UUID.fromString(record.getGameid());
@@ -105,31 +103,28 @@ public class CassandraRepository {
 
         Date dateSave = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
 
-        session.execute(
-                insertMoveStatement.bind(
-                        gameId,
-                        dateSave,
-                        playerId,
-                        record.getSymbol(),
-                        location
-                )
-        );
+        session.execute(insertMoveStatement.bind(gameId, dateSave, playerId, record.getSymbol(), location));
 
-        //duplicated player and game row
-        session.execute(
-                insertPlayerGameStatement.bind(
-                        playerId,
-                        dateSave,
-                        gameId
-                )
-        );
+        if (!playerGameExists(playerId, gameId)) {
+            session.execute(insertPlayerGameStatement.bind(playerId, dateSave, gameId));
+        }
+    }
+
+    private boolean playerGameExists(UUID playerId, UUID gameId) {
+        ResultSet resultSet = session.execute(findGamesByPlayerIdStatement.bind(playerId));
+
+        for (Row row : resultSet) {
+            if (gameId.equals(row.getUUID("game_id"))) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public List<MoveRecord> findMovesByGameId(String gameId) {
 
-        ResultSet resultSet = session.execute(
-                findMovesByGameIdStatement.bind(UUID.fromString(gameId))
-        );
+        ResultSet resultSet = session.execute(findMovesByGameIdStatement.bind(UUID.fromString(gameId)));
 
         List<MoveRecord> moves = new ArrayList<>();
 
@@ -160,28 +155,24 @@ public class CassandraRepository {
         return moves;
     }
 
+
     public List<String> findGamesByPlayerId(String playerId) {
 
         UUID playerUuid = UUID.fromString(playerId);
 
-        ResultSet resultSet = session.execute(
-                findGamesByPlayerIdStatement.bind(playerUuid)
-        );
+        ResultSet resultSet = session.execute(findGamesByPlayerIdStatement.bind(playerUuid));
 
         List<String> gameIds = new ArrayList<>();
 
         for (Row row : resultSet) {
-            gameIds.add(
-                    row.getUUID("game_id").toString()
-            );
+            gameIds.add(row.getUUID("game_id").toString());
         }
 
         return gameIds;
     }
 
     public void createRoom(String roomCode) {
-        session.execute( insertRoomStatement.bind(roomCode)
-        );
+        session.execute( insertRoomStatement.bind(roomCode));
     }
 
     public boolean roomExists(String roomCode) {
@@ -199,28 +190,18 @@ public class CassandraRepository {
         UUID gameUuid = UUID.fromString(gameId);
         Date dateSaved = new Date();
 
-        session.execute(
-                insertRoomGameStatement.bind(
-                        roomCode,
-                        dateSaved,
-                        gameUuid
-                )
-        );
+        session.execute(insertRoomGameStatement.bind(roomCode, dateSaved, gameUuid));
     }
 
     public Room findRoom(String roomCode) {
 
-        Row roomRow = session.execute(
-                findRoomByCodeStatement.bind(roomCode)
-        ).one();
+        Row roomRow = session.execute(findRoomByCodeStatement.bind(roomCode)).one();
 
         if (roomRow == null) {
             return null;
         }
 
-        ResultSet resultSet = session.execute(
-                findGamesByRoomCodeStatement.bind(roomCode)
-        );
+        ResultSet resultSet = session.execute(findGamesByRoomCodeStatement.bind(roomCode));
 
         List<String> gameIds = new ArrayList<>();
 
@@ -243,7 +224,6 @@ public class CassandraRepository {
 
         for (Row row : resultSet) {
             String roomCode = row.getString("room_code");
-
             Room room = findRoom(roomCode);
 
             if (room != null) {
