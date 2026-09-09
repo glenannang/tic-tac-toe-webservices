@@ -24,6 +24,8 @@
         <compiler-plugin.version>3.15.0</compiler-plugin.version>
         <war-plugin.version>3.5.1</war-plugin.version>
         <payara-micro-plugin.version>2.0</payara-micro-plugin.version>
+        <cassandra.driver.version>3.11.5</cassandra.driver.version>
+        <slf4j.version>1.7.36</slf4j.version>
     </properties>
 
     <dependencies>
@@ -40,6 +42,20 @@
             <version>${payara.version}</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.datastax.cassandra</groupId>
+            <artifactId>cassandra-driver-core</artifactId>
+            <version>${cassandra.driver.version}</version>
+        </dependency>
+
+        <!-- The driver logs via SLF4J -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>

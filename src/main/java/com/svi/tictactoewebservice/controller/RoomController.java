@@ -20,13 +20,34 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import java.io.IOException;
+import com.svi.tictactoewebservice.repository.CassandraRepository;
+
+import javax.annotation.PostConstruct;
+import javax.servlet.ServletContext;
+import javax.ws.rs.core.Context;
 
 
 @Path("/room")
 public class RoomController {
 
-    private final GameService gameService = new GameServiceImpl();
+    @Context
+    private ServletContext servletContext;
+
+    private GameService gameService;
+
     private final RoomService roomService = new RoomServiceImpl();
+
+    @PostConstruct
+    public void initialize() {
+
+        CassandraRepository cassandraRepository =
+                (CassandraRepository) servletContext.getAttribute(
+                        "cassandraRepository"
+                );
+
+        this.gameService =
+                new GameServiceImpl(cassandraRepository);
+    }
 
 
     // Creates a new room record.

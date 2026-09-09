@@ -1,15 +1,12 @@
 package com.svi.tictactoewebservice.service.impl;
 import com.svi.tictactoewebservice.dto.request.MoveRequest;
-import com.svi.tictactoewebservice.dto.response.ApiResponse;
+import com.svi.tictactoewebservice.dto.response.*;
 import com.svi.tictactoewebservice.model.MoveRecord;
+import com.svi.tictactoewebservice.repository.CassandraRepository;
 import com.svi.tictactoewebservice.repository.GameRepository;
 import com.svi.tictactoewebservice.service.GameService;
-import com.svi.tictactoewebservice.validator.IdValidator;
 import com.svi.tictactoewebservice.validator.MoveRequestValidator;
-import com.svi.tictactoewebservice.dto.response.GameIdResponse;
-import com.svi.tictactoewebservice.dto.response.RoomResponse;
 import com.svi.tictactoewebservice.validator.MoveValidator;
-import com.svi.tictactoewebservice.dto.response.GameDetailsResponse;
 
 
 
@@ -22,39 +19,41 @@ import java.util.UUID;
 public class GameServiceImpl implements GameService {
     private final RoomServiceImpl roomService = new RoomServiceImpl();
     private final GameRepository gameRepository = new GameRepository();
-    //private final IdValidator idValidator = new IdValidator();
+    private final CassandraRepository cassandraGameRepository;
     private final MoveRequestValidator moveRequestValidator = new MoveRequestValidator();
     private final MoveValidator moveValidator = new MoveValidator();
+    public GameServiceImpl(CassandraRepository cassandraGameRepository) {
+        this.cassandraGameRepository = cassandraGameRepository;
+    }
 
     @Override
     public ApiResponse saveMove(MoveRequest request) throws IOException {
 
-        //moveRequestValidator.validate(request); //can throw IllegalArgumentException
+           // List<MoveRecord> existingMoves = gameRepository.findMovesByGameId(request.getGameid());//can throw IOException
 
-        List<MoveRecord> existingMoves = gameRepository.findMovesByGameId(request.getGameid());//can throw IOException
+           // moveValidator.validate(request, existingMoves); //can throw IllegalArgumentException
 
-        moveValidator.validate(request, existingMoves); //can throw IllegalArgumentException
+            //convert move request to moverecord
+            MoveRecord record = new MoveRecord();
+            record.setGameid(request.getGameid());
+            record.setPlayerid(request.getPlayerid());
+            record.setSymbol(request.getSymbol());
+            record.setLocation(request.getLocation());
 
-        //convert move request to moverecord
-        MoveRecord record = new MoveRecord();
-        record.setGameid(request.getGameid());
-        record.setPlayerid(request.getPlayerid());
-        record.setSymbol(request.getSymbol());
-        record.setLocation(request.getLocation());
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            record.setDatesave(LocalDateTime.now().format(formatter));
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        record.setDatesave(LocalDateTime.now().format(formatter));
-
-        gameRepository.saveMove(record); //can throw IO exception
-        return new ApiResponse("Record saved.");
+            //gameRepository.saveMove(record); //can throw IO exception
+            cassandraGameRepository.saveMove(record);
+            return new ApiResponse("Record saved.");
     }
 
 
     @Override
     public GameDetailsResponse getGameDetails(String gameId) throws IOException {
-        //idValidator.validateGameId(gameId);
 
-        List<MoveRecord> moves = gameRepository.findMovesByGameId(gameId);
+        //List<MoveRecord> moves = gameRepository.findMovesByGameId(gameId);
+        List<MoveRecord> moves = cassandraGameRepository.findMovesByGameId(gameId);
 
         if (moves == null) {
             return null;

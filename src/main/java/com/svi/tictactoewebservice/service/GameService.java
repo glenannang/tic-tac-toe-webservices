@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public interface GameService {
 
-    ApiResponse saveMove(MoveRequest request) throws IOException;
+    ApiResponse saveMove(MoveRequest request)throws IOException;
 
     GameDetailsResponse getGameDetails(String gameId) throws IOException;
 

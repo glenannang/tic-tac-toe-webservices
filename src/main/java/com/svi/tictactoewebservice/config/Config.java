@@ -23,7 +23,11 @@ public final class Config {
         PLAYER_DIR("PLAYER_DIR"),
         GAME_DIR("GAME_DIR"),
         ROOM_DIR("ROOM_DIR"),
-        FRONTEND_URL("FRONTEND_URL");
+        FRONTEND_URL("FRONTEND_URL"),
+
+        CASSANDRA_IP("CASSANDRA_IP"),
+        CASSANDRA_PORT("CASSANDRA_PORT"),
+        CASSANDRA_KEYSPACE("CASSANDRA_KEYSPACE");
 
         private final String value;
 

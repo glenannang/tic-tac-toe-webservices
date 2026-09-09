@@ -1,5 +1,10 @@
 package com.svi.tictactoewebservice.controller;
 
+import com.svi.tictactoewebservice.repository.CassandraRepository;
+import javax.annotation.PostConstruct;
+import javax.servlet.ServletContext;
+import javax.ws.rs.core.Context;
+
 import com.svi.tictactoewebservice.dto.request.MoveRequest;
 import com.svi.tictactoewebservice.dto.response.*;
 import com.svi.tictactoewebservice.service.GameService;
@@ -20,10 +25,26 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 
 
+
 @Path("/game")
 public class GameController {
+    @Context
+    private ServletContext servletContext;
 
-    private final GameService gameService = new GameServiceImpl();
+    @PostConstruct
+    public void initialize() {
+
+        CassandraRepository cassandraRepository =
+                (CassandraRepository) servletContext.getAttribute(
+                        "cassandraRepository"
+                );
+
+        this.gameService =
+                new GameServiceImpl(cassandraRepository);
+    }
+
+
+    private GameService gameService;
 
     // Saves a player's move in a game
     @POST
@@ -31,21 +52,26 @@ public class GameController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response save(@Valid MoveRequest request) {
-
-        try {
+        try{
             ApiResponse response = gameService.saveMove(request);
             return Response.ok(response).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new ErrorResponse(e.getMessage()))
+                    .build();
 
-        }
-        catch (IllegalArgumentException e){
-            return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorResponse(e.getMessage())).build();
-        }
-        catch (IOException e) {
-            return Response.status(401).entity(new ErrorResponse("Record could not be saved")).build();
+        } catch (IOException e) {
+            return Response.status(402)
+                    .entity(new ErrorResponse("Record could not be saved"))
+                    .build();
 
         } catch (Exception e) {
-            return Response.status(500).entity(new ErrorResponse("Record could not be saved")).build();
+            return Response.status(500)
+                    .entity(new ErrorResponse("Record could not be saved"))
+                    .build();
         }
+
+
     }
 
     // Retrieves all move records for a specific game

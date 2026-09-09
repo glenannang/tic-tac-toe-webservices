@@ -1,5 +1,5 @@
 package com.svi.tictactoewebservice.context;
-
+import com.svi.tictactoewebservice.connection.CassandraConnection;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -7,13 +7,15 @@ import javax.servlet.annotation.WebListener;
 import com.svi.tictactoewebservice.config.Config;
 import java.io.IOException;
 import java.io.InputStream;
-
+import com.svi.tictactoewebservice.config.ConfigLoader;
+import com.svi.tictactoewebservice.repository.CassandraRepository;
 @WebListener
 public class AppStartup implements ServletContextListener {
 
     private static final String CONFIG_INI_LOCATION = "CONFIG_INI_LOCATION";
 
     private ServletContext context;
+    private CassandraConnection cassandraConnection;
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
@@ -44,12 +46,29 @@ public class AppStartup implements ServletContextListener {
             );
         }
 
-
         // Database initialization
+        cassandraConnection = new CassandraConnection();
+        cassandraConnection.initialize();
+        ConfigLoader config = ConfigLoader.getInstance();
+
+        CassandraRepository cassandraRepository =
+                new CassandraRepository(
+                        cassandraConnection.getSession(),
+                        config.getCassandraTable()
+                );
+
+        context.setAttribute(
+                "cassandraRepository",
+                cassandraRepository
+        );
+
+
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        // Close database resources
+        if (cassandraConnection != null) {
+            cassandraConnection.destroy();
+        }
     }
 }
