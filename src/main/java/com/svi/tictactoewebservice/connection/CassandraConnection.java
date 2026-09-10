@@ -26,6 +26,20 @@ public final class CassandraConnection implements AutoCloseable {
      * once per instance; call {@link #destroy()} (or {@link #close()}) before
      * re-initializing.</p>
      */
+
+    private CassandraConnection() {
+        initialize();
+    }
+
+    private static class Holder {
+        private static final CassandraConnection INSTANCE =
+                new CassandraConnection();
+    }
+
+    public static CassandraConnection getInstance() {
+        return Holder.INSTANCE;
+    }
+
     public void initialize() {
         if (session != null) {
             throw new IllegalStateException("CassandraConnection is already initialized");

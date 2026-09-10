@@ -1,14 +1,12 @@
 package com.svi.tictactoewebservice.service.impl;
+import com.svi.tictactoewebservice.connection.CassandraConnection;
 import com.svi.tictactoewebservice.dto.request.MoveRequest;
 import com.svi.tictactoewebservice.dto.response.*;
 import com.svi.tictactoewebservice.model.MoveRecord;
 import com.svi.tictactoewebservice.repository.CassandraRepository;
 import com.svi.tictactoewebservice.repository.GameRepository;
 import com.svi.tictactoewebservice.service.GameService;
-import com.svi.tictactoewebservice.validator.MoveRequestValidator;
 import com.svi.tictactoewebservice.validator.MoveValidator;
-
-
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -17,16 +15,13 @@ import java.util.List;
 import java.util.UUID;
 
 public class GameServiceImpl implements GameService {
-    private final RoomServiceImpl roomService;
+
+    private final RoomServiceImpl roomService = new RoomServiceImpl();
     private final GameRepository gameRepository = new GameRepository();
-    private final CassandraRepository cassandraGameRepository;
-    private final MoveRequestValidator moveRequestValidator = new MoveRequestValidator();
+    private final CassandraRepository cassandraGameRepository = new CassandraRepository(CassandraConnection.getInstance().getSession());
     private final MoveValidator moveValidator = new MoveValidator();
 
-    public GameServiceImpl(CassandraRepository cassandraGameRepository) {
-        this.cassandraGameRepository = cassandraGameRepository;
-        this.roomService = new RoomServiceImpl(cassandraGameRepository);
-    }
+
 
     @Override
     public ApiResponse saveMove(MoveRequest request) throws IOException {

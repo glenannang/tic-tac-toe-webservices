@@ -1,6 +1,6 @@
-USE cassandra_activity;
+USE batch1_2026_trainees;
 
-CREATE TABLE IF NOT EXISTS annang_user_table (
+CREATE TABLE IF NOT EXISTS annang_moves_table (
                                                  game_id uuid,
                                                  date_save timestamp,
                                                  player_id uuid,
@@ -9,20 +9,23 @@ CREATE TABLE IF NOT EXISTS annang_user_table (
                                                  PRIMARY KEY (game_id, date_save)
 ) WITH CLUSTERING ORDER BY (date_save ASC);
 
-CREATE TABLE IF NOT EXISTS annang_player_games (
+CREATE TABLE IF NOT EXISTS annang_player_games_table (
                                                    player_id uuid,
                                                    date_saved timestamp,
                                                    game_id uuid,
-                                                   PRIMARY KEY (player_id, date_saved, game_id)
+                                                   PRIMARY KEY (player_id, date_saved)
 ) WITH CLUSTERING ORDER BY (date_saved ASC);
 
-CREATE TABLE IF NOT EXISTS annang_room_games (
+
+CREATE TABLE IF NOT EXISTS annang_rooms_table (
+                                            room_code text PRIMARY KEY
+);
+
+
+CREATE TABLE IF NOT EXISTS annang_room_games_table (
                                                  room_code text,
                                                  date_saved timestamp,
                                                  game_id uuid,
-                                                 PRIMARY KEY (room_code, date_saved, game_id)
+                                                 PRIMARY KEY (room_code, date_saved)
 ) WITH CLUSTERING ORDER BY (date_saved ASC);
 
-CREATE TABLE IF NOT EXISTS annang_rooms (
-                                            room_code text PRIMARY KEY
-);

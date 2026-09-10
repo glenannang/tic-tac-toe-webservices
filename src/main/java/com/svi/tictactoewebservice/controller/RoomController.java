@@ -1,16 +1,14 @@
 package com.svi.tictactoewebservice.controller;
 
-import com.svi.tictactoewebservice.dto.request.RoomRequest;
 import com.svi.tictactoewebservice.dto.response.*;
 import com.svi.tictactoewebservice.service.GameService;
 import com.svi.tictactoewebservice.service.RoomService;
 import com.svi.tictactoewebservice.service.impl.GameServiceImpl;
 import com.svi.tictactoewebservice.service.impl.RoomServiceImpl;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
-import javax.ws.rs.Consumes;
+
 import javax.ws.rs.POST;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -20,56 +18,14 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import java.io.IOException;
-import com.svi.tictactoewebservice.repository.CassandraRepository;
-
-import javax.annotation.PostConstruct;
-import javax.servlet.ServletContext;
-import javax.ws.rs.core.Context;
-
 
 @Path("/room")
 public class RoomController {
 
-    @Context
-    private ServletContext servletContext;
+    private final GameService gameService = new GameServiceImpl();
 
-    private GameService gameService;
+    private final RoomService roomService = new RoomServiceImpl();
 
-    //private final RoomService roomService = new RoomServiceImpl();
-    private RoomService roomService;
-
-    @PostConstruct
-    public void initialize() {
-
-        CassandraRepository cassandraRepository =
-                (CassandraRepository) servletContext.getAttribute(
-                        "cassandraRepository"
-                );
-
-        this.gameService =
-                new GameServiceImpl(cassandraRepository);
-
-        this.roomService =
-                new RoomServiceImpl(cassandraRepository);
-    }
-
-
-    // Creates a new room record.
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response createRoom(@Valid RoomRequest request) {
-        try {
-            ApiResponse response = roomService.createRoom(request);
-            return Response.status(Response.Status.CREATED).entity(response).build();
-
-        } catch (IOException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ErrorResponse("Failed to create room.")).build();
-
-        } catch (IllegalArgumentException e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorResponse(e.getMessage())).build();
-        }
-    }
 
     // Creates a new game and associates it with the specified room
     @POST

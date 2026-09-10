@@ -26,21 +26,7 @@ import java.io.IOException;
 @Path("/player")
 public class PlayerController {
 
-    @Context
-    private ServletContext servletContext;
-
-    @PostConstruct
-    public void initialize() {
-
-        CassandraRepository cassandraRepository =
-                (CassandraRepository) servletContext.getAttribute(
-                        "cassandraRepository"
-                );
-
-        this.playerService =
-                new PlayerServiceImpl(cassandraRepository);
-    }
-    private PlayerService playerService;
+    private final PlayerService playerService = new PlayerServiceImpl();
 
     // Retrieves all games participated in by a player
     @GET

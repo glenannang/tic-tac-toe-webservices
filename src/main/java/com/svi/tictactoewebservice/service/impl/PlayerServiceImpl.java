@@ -1,5 +1,6 @@
 package com.svi.tictactoewebservice.service.impl;
 
+import com.svi.tictactoewebservice.connection.CassandraConnection;
 import com.svi.tictactoewebservice.dto.response.GameListResponse;
 import com.svi.tictactoewebservice.dto.response.RoomListResponse;
 import com.svi.tictactoewebservice.repository.CassandraRepository;
@@ -18,14 +19,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     private final GameRepository gameRepository = new GameRepository();
     private final RoomRepository roomRepository = new RoomRepository();
-
-    //private final IdValidator idValidator = new IdValidator();
-    private final CassandraRepository cassandraRepository;
-
-    public PlayerServiceImpl(CassandraRepository cassandraRepository) {
-        this.cassandraRepository = cassandraRepository;
-    }
-
+    private final CassandraRepository cassandraRepository = new CassandraRepository(CassandraConnection.getInstance().getSession());
 
 
     @Override

@@ -47,19 +47,19 @@ public class AppStartup implements ServletContextListener {
         }
 
         // Database initialization
-        cassandraConnection = new CassandraConnection();
-        cassandraConnection.initialize();
+        cassandraConnection = CassandraConnection.getInstance();
+//        cassandraConnection.initialize();
         ConfigLoader config = ConfigLoader.getInstance();
 
-        CassandraRepository cassandraRepository =
-                new CassandraRepository(
-                        cassandraConnection.getSession()
-                );
-
-        context.setAttribute(
-                "cassandraRepository",
-                cassandraRepository
-        );
+//        CassandraRepository cassandraRepository =
+//                new CassandraRepository(
+//                        cassandraConnection.getSession()
+//                );
+//
+//        context.setAttribute(
+//                "cassandraRepository",
+//                cassandraRepository
+//        );
 
 
     }

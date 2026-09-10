@@ -29,9 +29,6 @@ public class CassandraRepository {
     private final PreparedStatement findGamesByRoomCodeStatement;
     private final PreparedStatement findAllRoomsStatement;
 
-
-
-
     private final PreparedStatement insertRoomStatement;
 
 
@@ -96,10 +93,7 @@ public class CassandraRepository {
         UUID playerId = UUID.fromString(record.getPlayerid());
         int location = Integer.parseInt(record.getLocation());
 
-        LocalDateTime localDateTime = LocalDateTime.parse(
-                record.getDatesave(),
-                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-        );
+        LocalDateTime localDateTime = LocalDateTime.parse(record.getDatesave(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
         Date dateSave = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
 
@@ -144,12 +138,7 @@ public class CassandraRepository {
                     ZoneId.systemDefault()
             );
 
-            record.setDatesave(
-                    localDateTime.format(
-                            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-                    )
-            );
-
+            record.setDatesave(localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
             moves.add(record);
         }
         return moves;
@@ -171,21 +160,8 @@ public class CassandraRepository {
         return gameIds;
     }
 
-    public void createRoom(String roomCode) {
-        session.execute( insertRoomStatement.bind(roomCode));
-    }
-
-    public boolean roomExists(String roomCode) {
-
-        Row row = session.execute(findRoomByCodeStatement.bind(roomCode)).one();
-        return row != null;
-    }
 
     public void addGameToRoom(String roomCode, String gameId) throws IOException {
-
-        if (!roomExists(roomCode)) {
-            throw new IOException("Room does not exist.");
-        }
 
         UUID gameUuid = UUID.fromString(gameId);
         Date dateSaved = new Date();
@@ -219,7 +195,6 @@ public class CassandraRepository {
     public List<Room> findAllRooms() {
 
         ResultSet resultSet = session.execute(findAllRoomsStatement.bind());
-
         List<Room> rooms = new ArrayList<>();
 
         for (Row row : resultSet) {
@@ -230,7 +205,6 @@ public class CassandraRepository {
                 rooms.add(room);
             }
         }
-
         return rooms;
     }
 

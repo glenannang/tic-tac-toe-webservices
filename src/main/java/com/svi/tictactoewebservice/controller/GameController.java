@@ -1,10 +1,5 @@
 package com.svi.tictactoewebservice.controller;
 
-import com.svi.tictactoewebservice.repository.CassandraRepository;
-import javax.annotation.PostConstruct;
-import javax.servlet.ServletContext;
-import javax.ws.rs.core.Context;
-
 import com.svi.tictactoewebservice.dto.request.MoveRequest;
 import com.svi.tictactoewebservice.dto.response.*;
 import com.svi.tictactoewebservice.service.GameService;
@@ -25,26 +20,10 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 
 
-
 @Path("/game")
 public class GameController {
-    @Context
-    private ServletContext servletContext;
 
-    @PostConstruct
-    public void initialize() {
-
-        CassandraRepository cassandraRepository =
-                (CassandraRepository) servletContext.getAttribute(
-                        "cassandraRepository"
-                );
-
-        this.gameService =
-                new GameServiceImpl(cassandraRepository);
-    }
-
-
-    private GameService gameService;
+    private final GameService gameService = new GameServiceImpl();
 
     // Saves a player's move in a game
     @POST

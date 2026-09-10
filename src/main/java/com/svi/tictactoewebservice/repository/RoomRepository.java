@@ -14,20 +14,16 @@ public class RoomRepository {
     private final File roomsFolder = new File(Config.get(Config.Keys.RECORDS_DIR.value()), Config.get(Config.Keys.ROOM_DIR.value()));
     private final FileStorageService fileStorageService = new FileStorageServiceImpl();
 
-    public void createRoom(Room room) throws IOException {
 
-        fileStorageService.createDirectory(roomsFolder);
-        File roomFile = new File(roomsFolder, room.getRoomCode() + ".txt");
-        fileStorageService.createFile(roomFile);
-
-    }
 
     public void addGameToRoom(String roomCode, String gameId) throws IOException {
 
         File roomFile = new File(roomsFolder, roomCode + ".txt");
 
         if (!roomFile.exists()) {
-            throw new IOException("Room does not exist.");
+            if (!roomFile.exists()) {
+                roomFile.createNewFile();
+            }
         }
 
         fileStorageService.appendLine(roomFile, gameId);

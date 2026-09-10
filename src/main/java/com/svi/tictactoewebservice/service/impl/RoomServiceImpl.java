@@ -1,5 +1,6 @@
 package com.svi.tictactoewebservice.service.impl;
 
+import com.svi.tictactoewebservice.connection.CassandraConnection;
 import com.svi.tictactoewebservice.dto.request.RoomRequest;
 import com.svi.tictactoewebservice.dto.response.ApiResponse;
 import com.svi.tictactoewebservice.dto.response.RoomResponse;
@@ -14,24 +15,10 @@ import java.io.IOException;
 
 public class RoomServiceImpl implements RoomService {
 
+    private final CassandraRepository cassandraRepository = new CassandraRepository(CassandraConnection.getInstance().getSession());
     private final RoomRepository roomRepository = new RoomRepository();
-    private final CassandraRepository cassandraRepository;
 
-    public RoomServiceImpl(CassandraRepository cassandraRepository) {
-        this.cassandraRepository = cassandraRepository;
-    }
 
-    @Override
-    public ApiResponse createRoom(RoomRequest request) throws IOException {
-
-        //for old file-base repository
-        //Room room = new Room();
-        //room.setRoomCode(request.getRoomCode());
-        //roomRepository.createRoom(room);
-        cassandraRepository.createRoom(request.getRoomCode());
-
-        return new ApiResponse("Room record created.");
-    }
 
     @Override
     public RoomResponse getRoom(String roomCode) throws IOException {
