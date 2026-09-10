@@ -17,11 +17,6 @@ CREATE TABLE IF NOT EXISTS annang_player_games_table (
 ) WITH CLUSTERING ORDER BY (date_saved ASC);
 
 
-CREATE TABLE IF NOT EXISTS annang_rooms_table (
-                                            room_code text PRIMARY KEY
-);
-
-
 CREATE TABLE IF NOT EXISTS annang_room_games_table (
                                                  room_code text,
                                                  date_saved timestamp,
