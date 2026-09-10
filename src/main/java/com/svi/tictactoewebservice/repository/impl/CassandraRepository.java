@@ -76,8 +76,8 @@ public class CassandraRepository implements GameRecordRepository, RoomRecordRepo
 
     //for saving moves
     public void saveMove(MoveRecord record) {
-        UUID gameId = UUID.fromString(record.getGameid());
-        UUID playerId = UUID.fromString(record.getPlayerid());
+        UUID gameId = record.getGameid();
+        UUID playerId = record.getPlayerid();
         int location = Integer.parseInt(record.getLocation());
 
         LocalDateTime localDateTime = LocalDateTime.parse(record.getDatesave(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
@@ -113,8 +113,8 @@ public class CassandraRepository implements GameRecordRepository, RoomRecordRepo
         for (Row row : resultSet) {
             MoveRecord record = new MoveRecord();
 
-            record.setGameid(row.getUUID("game_id").toString());
-            record.setPlayerid(row.getUUID("player_id").toString());
+            record.setGameid(row.getUUID("game_id"));
+            record.setPlayerid(row.getUUID("player_id"));
             record.setSymbol(row.getString("symbol"));
             record.setLocation(String.valueOf(row.getInt("location")));
 
@@ -132,28 +132,28 @@ public class CassandraRepository implements GameRecordRepository, RoomRecordRepo
     }
 
 
-    public List<String> findGamesByPlayerId(UUID playerId) {
+    public List<UUID> findGamesByPlayerId(UUID playerId) {
 
         //UUID playerUuid = UUID.fromString(playerId);
 
         ResultSet resultSet = session.execute(findGamesByPlayerIdStatement.bind(playerId));
 
-        List<String> gameIds = new ArrayList<>();
+        List<UUID> gameIds = new ArrayList<>();
 
         for (Row row : resultSet) {
-            gameIds.add(row.getUUID("game_id").toString());
+            gameIds.add(row.getUUID("game_id"));
         }
 
         return gameIds;
     }
 
 
-    public void addGameToRoom(String roomCode, String gameId) throws IOException {
+    public void addGameToRoom(String roomCode, UUID gameId) throws IOException {
 
-        UUID gameUuid = UUID.fromString(gameId);
+        //UUID gameUuid = UUID.fromString(gameId);
         Date dateSaved = new Date();
 
-        session.execute(insertRoomGameStatement.bind(roomCode, dateSaved, gameUuid));
+        session.execute(insertRoomGameStatement.bind(roomCode, dateSaved, gameId));
     }
 
     public Room findRoom(String roomCode) {

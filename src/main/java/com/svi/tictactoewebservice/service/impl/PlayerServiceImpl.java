@@ -26,7 +26,7 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public GameListResponse getPlayerGames(UUID playerId) throws IOException {
 
-        List<String> games = gameRepository.findGamesByPlayerId(playerId);
+        List<UUID> games = gameRepository.findGamesByPlayerId(playerId);
 
         if (games == null) {
             return null;
@@ -34,8 +34,8 @@ public class PlayerServiceImpl implements PlayerService {
 
         List<GameListResponse.GameId> gameList = new ArrayList<>();
 
-        for (String gameId : games) {
-            gameList.add(new GameListResponse.GameId(gameId));
+        for (UUID gameId : games) {
+            gameList.add(new GameListResponse.GameId(gameId.toString()));
         }
 
         return new GameListResponse(gameList, "Records found");
@@ -44,7 +44,7 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public RoomListResponse getPlayerRooms(UUID playerId) throws IOException  {
 
-        List<String> playerGames = gameRepository.findGamesByPlayerId(playerId);
+        List<UUID> playerGames = gameRepository.findGamesByPlayerId(playerId);
         List<Room> allRooms = roomRepository.findAllRooms();
 
         List<RoomResponse> roomList = new ArrayList<>();
@@ -57,7 +57,7 @@ public class PlayerServiceImpl implements PlayerService {
             List<String> matchingGames = new ArrayList<>();
 
             for (String gameId : room.getGameIds()) {
-                if (playerGames.contains(gameId)) {
+                if (playerGames.contains(UUID.fromString(gameId))) {
                     matchingGames.add(gameId);
                 }
             }

@@ -5,6 +5,7 @@ import com.svi.tictactoewebservice.model.MoveRecord;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class MoveValidator {
 
@@ -50,7 +51,7 @@ public class MoveValidator {
     }
 
     private void validatePlayerLimit(MoveRequest request, List<MoveRecord> existingMoves) {
-        List<String> playerIds = new ArrayList<>();
+        List<UUID> playerIds = new ArrayList<>();
 
         for (MoveRecord move : existingMoves) {
             if (!playerIds.contains(move.getPlayerid())) {

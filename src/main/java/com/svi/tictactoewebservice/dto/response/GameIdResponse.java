@@ -1,21 +1,23 @@
 package com.svi.tictactoewebservice.dto.response;
 
+import java.util.UUID;
+
 public class GameIdResponse {
 
-    private String gameId;
+    private UUID gameId;
 
     public GameIdResponse() {
     }
 
-    public GameIdResponse(String gameId) {
+    public GameIdResponse(UUID gameId) {
         this.gameId = gameId;
     }
 
-    public String getGameId() {
+    public UUID getGameId() {
         return gameId;
     }
 
-    public void setGameId(String gameId) {
+    public void setGameId(UUID gameId) {
         this.gameId = gameId;
     }
 

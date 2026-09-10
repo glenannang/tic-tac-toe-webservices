@@ -19,10 +19,7 @@ public class GameServiceImpl implements GameService {
 
     private final RoomServiceImpl roomService = new RoomServiceImpl();
     private final MoveValidator moveValidator = new MoveValidator();
-    private final GameRecordRepository gameRepository =
-            new CassandraRepository(
-                    CassandraConnection.getInstance().getSession()
-            );
+    private final GameRecordRepository gameRepository = new CassandraRepository(CassandraConnection.getInstance().getSession());
 
 
     @Override
@@ -63,15 +60,15 @@ public class GameServiceImpl implements GameService {
     @Override
     public GameIdResponse createGameRecord(String roomCode) throws IOException {
 
-        String gameId = generateGameId();
+        UUID gameId = generateGameId();
         roomService.addGameToRoom(roomCode,gameId);
 
         return new GameIdResponse(gameId);
 
     }
 
-    private String generateGameId() {
-        return UUID.randomUUID().toString();
+    private UUID generateGameId() {
+        return UUID.randomUUID();
     }
 
 }

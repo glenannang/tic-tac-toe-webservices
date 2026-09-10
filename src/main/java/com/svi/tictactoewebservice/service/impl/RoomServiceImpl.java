@@ -9,6 +9,7 @@ import com.svi.tictactoewebservice.service.RoomService;
 import com.svi.tictactoewebservice.repository.impl.CassandraRepository;
 
 import java.io.IOException;
+import java.util.UUID;
 
 
 public class RoomServiceImpl implements RoomService {
@@ -29,7 +30,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public void addGameToRoom(String roomCode, String gameId) throws IOException {
+    public void addGameToRoom(String roomCode, UUID gameId) throws IOException {
         roomRepository.addGameToRoom(roomCode, gameId);
     }
 }

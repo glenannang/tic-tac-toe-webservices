@@ -1,10 +1,12 @@
 package com.svi.tictactoewebservice.dto.request;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.util.UUID;
 
 public class MoveRequest {
 
+    @NotNull(message = "Game ID is required.")
     private UUID gameid;
 
     @NotBlank(message = "Symbol is required.")
@@ -17,11 +19,8 @@ public class MoveRequest {
               message = "Location must be between 0 and 8.")
     private String location;
 
-
-    @NotBlank(message = "Player ID is required.")
-    @Pattern(regexp = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
-             message = "Player ID must be a valid UUID.")
-    private String playerid;
+    @NotNull(message = "Player ID is required.")
+    private UUID playerid;
 
 
     public MoveRequest() {
@@ -51,11 +50,11 @@ public class MoveRequest {
         this.location = location;
     }
 
-    public String getPlayerid() {
+    public UUID getPlayerid() {
         return playerid;
     }
 
-    public void setPlayerid(String playerid) {
+    public void setPlayerid(UUID playerid) {
         this.playerid = playerid;
     }
 

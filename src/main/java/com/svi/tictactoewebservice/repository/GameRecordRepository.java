@@ -12,5 +12,5 @@ public interface GameRecordRepository {
 
     List<MoveRecord> findMovesByGameId(UUID gameId) throws IOException;
 
-    List<String> findGamesByPlayerId(UUID playerId) throws IOException;
+    List<UUID> findGamesByPlayerId(UUID playerId) throws IOException;
 }

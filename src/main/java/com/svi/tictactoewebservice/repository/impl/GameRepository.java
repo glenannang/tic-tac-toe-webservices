@@ -40,14 +40,14 @@ public class GameRepository implements GameRecordRepository {
         List<String> playerGames = fileStorageService.readLines(playerFile);
 
         for (String line : playerGames) {
-            if (line.trim().equals(record.getGameid())) {
+            if (line.trim().equals(record.getGameid().toString())) {
                 gameAlreadyExists = true;
                 break;
             }
         }
 
         if (!gameAlreadyExists) {
-            fileStorageService.appendLine(playerFile, record.getGameid());
+            fileStorageService.appendLine(playerFile, record.getGameid().toString());
         }
 
         File gameFile = new File(gameFolder, record.getGameid() + ".txt");
@@ -65,7 +65,7 @@ public class GameRepository implements GameRecordRepository {
 
     }
 
-    public List<String> findGamesByPlayerId(UUID playerId) throws IOException {
+    public List<UUID> findGamesByPlayerId(UUID playerId) throws IOException {
 
         File playerFile = new File(playerFolder, playerId + ".txt");
 
@@ -74,11 +74,11 @@ public class GameRepository implements GameRecordRepository {
         }
 
         List<String> lines = fileStorageService.readLines(playerFile);
-        List<String> games = new ArrayList<>();
+        List<UUID> games = new ArrayList<>();
 
         for (String line : lines) {
             if (!line.trim().isEmpty()) {
-                games.add(line.trim());
+                games.add(UUID.fromString(line.trim()));
             }
         }
 
@@ -110,8 +110,8 @@ public class GameRepository implements GameRecordRepository {
 
             MoveRecord move = new MoveRecord();
 
-            move.setGameid(fields[0].trim());
-            move.setPlayerid(fields[1].trim());
+            move.setGameid(UUID.fromString(fields[0].trim()));
+            move.setPlayerid(UUID.fromString(fields[1].trim()));
             move.setSymbol(fields[2].trim());
             move.setLocation(fields[3].trim());
             move.setDatesave(fields[4].trim());

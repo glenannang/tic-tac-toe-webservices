@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class RoomRepository implements RoomRecordRepository {
 
@@ -17,17 +18,15 @@ public class RoomRepository implements RoomRecordRepository {
 
 
 
-    public void addGameToRoom(String roomCode, String gameId) throws IOException {
+    public void addGameToRoom(String roomCode, UUID gameId) throws IOException {
 
         File roomFile = new File(roomsFolder, roomCode + ".txt");
 
-        if (!roomFile.exists()) {
             if (!roomFile.exists()) {
                 roomFile.createNewFile();
             }
-        }
 
-        fileStorageService.appendLine(roomFile, gameId);
+        fileStorageService.appendLine(roomFile, gameId.toString());
     }
 
     public Room findRoom(String roomCode) throws IOException {

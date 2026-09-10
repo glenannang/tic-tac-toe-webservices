@@ -1,22 +1,24 @@
 package com.svi.tictactoewebservice.model;
 
 
+import java.util.UUID;
+
 public class MoveRecord {
 
-    private String gameid;
+    private UUID gameid;
     private String symbol;
     private String location;
-    private String playerid;
+    private UUID playerid;
     private String datesave;
 
     public MoveRecord() {
     }
 
-    public String getGameid() {
+    public UUID getGameid() {
         return gameid;
     }
 
-    public void setGameid(String gameid) {
+    public void setGameid(UUID gameid) {
         this.gameid = gameid;
     }
 
@@ -36,11 +38,11 @@ public class MoveRecord {
         this.location = location;
     }
 
-    public String getPlayerid() {
+    public UUID getPlayerid() {
         return playerid;
     }
 
-    public void setPlayerid(String playerid) {
+    public void setPlayerid(UUID playerid) {
         this.playerid = playerid;
     }
 
