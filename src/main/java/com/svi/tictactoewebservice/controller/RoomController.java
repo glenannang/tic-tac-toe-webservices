@@ -39,11 +39,6 @@ public class RoomController {
 
         try {
             GameIdResponse gameIdResponse = gameService.createGameRecord(roomCode);
-
-            if (gameIdResponse == null) {
-                return Response.status(Response.Status.NOT_FOUND).entity(new ErrorResponse("Room not found.")).build();
-            }
-
             return Response.status(Response.Status.CREATED).entity(gameIdResponse).build();
 
         } catch (IOException e) {

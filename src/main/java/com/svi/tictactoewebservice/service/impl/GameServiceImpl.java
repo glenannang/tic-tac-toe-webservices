@@ -61,11 +61,6 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public GameIdResponse createGameRecord(String roomCode) throws IOException {
-        RoomResponse room = roomService.getRoom(roomCode);
-
-        if (room == null) {
-            return null;
-        }
 
         String gameId = generateGameId();
         roomService.addGameToRoom(roomCode,gameId);

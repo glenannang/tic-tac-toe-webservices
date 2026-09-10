@@ -12,10 +12,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class CassandraRepository {
 
@@ -24,12 +21,11 @@ public class CassandraRepository {
     private final PreparedStatement findMovesByGameIdStatement;
     private final PreparedStatement insertPlayerGameStatement;
     private final PreparedStatement findGamesByPlayerIdStatement;
-    private final PreparedStatement findRoomByCodeStatement;
     private final PreparedStatement insertRoomGameStatement;
     private final PreparedStatement findGamesByRoomCodeStatement;
-    private final PreparedStatement findAllRoomsStatement;
+    private final PreparedStatement findAllRoomGamesStatement;
 
-    private final PreparedStatement insertRoomStatement;
+
 
 
     public CassandraRepository(Session session) {
@@ -37,7 +33,6 @@ public class CassandraRepository {
         ConfigLoader config = ConfigLoader.getInstance();
         String tableName = config.getCassandraTable();
         String playerGamesTable = config.getPlayerGamesTable();
-        String roomsTable = config.getRoomsTable();
         String roomGamesTable = config.getRoomGamesTable();
 
 
@@ -61,27 +56,19 @@ public class CassandraRepository {
                 "SELECT * FROM " + tableName + " WHERE game_id = ?"
         );
 
-        this.insertRoomStatement = session.prepare("INSERT INTO " + roomsTable + " (room_code) VALUES (?)"
-        );
-
 
         this.insertRoomGameStatement = session.prepare(
                 "INSERT INTO " + roomGamesTable +
                         " (room_code, date_saved, game_id) VALUES (?, ?, ?)"
         );
 
-        this.findRoomByCodeStatement = session.prepare(
-                "SELECT room_code FROM " + roomsTable +
-                        " WHERE room_code = ?"
-        );
         this.findGamesByRoomCodeStatement = session.prepare(
                 "SELECT game_id FROM " + roomGamesTable +
                         " WHERE room_code = ?"
         );
-        this.findAllRoomsStatement = session.prepare(
-                "SELECT room_code FROM " + roomsTable
+        this.findAllRoomGamesStatement = session.prepare(
+                "SELECT room_code, game_id FROM " + roomGamesTable
         );
-
 
 
     }
@@ -171,18 +158,18 @@ public class CassandraRepository {
 
     public Room findRoom(String roomCode) {
 
-        Row roomRow = session.execute(findRoomByCodeStatement.bind(roomCode)).one();
-
-        if (roomRow == null) {
-            return null;
-        }
-
-        ResultSet resultSet = session.execute(findGamesByRoomCodeStatement.bind(roomCode));
+        ResultSet resultSet = session.execute(
+                findGamesByRoomCodeStatement.bind(roomCode)
+        );
 
         List<String> gameIds = new ArrayList<>();
 
         for (Row row : resultSet) {
             gameIds.add(row.getUUID("game_id").toString());
+        }
+
+        if (gameIds.isEmpty()) {
+            return null;
         }
 
         Room room = new Room();
@@ -194,19 +181,30 @@ public class CassandraRepository {
 
     public List<Room> findAllRooms() {
 
-        ResultSet resultSet = session.execute(findAllRoomsStatement.bind());
-        List<Room> rooms = new ArrayList<>();
+        ResultSet resultSet = session.execute(findAllRoomGamesStatement.bind());
+
+        Map<String, List<String>> gamesByRoom = new HashMap<>();
 
         for (Row row : resultSet) {
             String roomCode = row.getString("room_code");
-            Room room = findRoom(roomCode);
+            String gameId = row.getUUID("game_id").toString();
 
-            if (room != null) {
-                rooms.add(room);
-            }
+            gamesByRoom
+                    .computeIfAbsent(roomCode, key -> new ArrayList<>())
+                    .add(gameId);
         }
+
+        List<Room> rooms = new ArrayList<>();
+
+        for (Map.Entry<String, List<String>> entry : gamesByRoom.entrySet()) {
+            Room room = new Room();
+            room.setRoomCode(entry.getKey());
+            room.setGameIds(entry.getValue());
+
+            rooms.add(room);
+        }
+
         return rooms;
     }
-
 
 }
