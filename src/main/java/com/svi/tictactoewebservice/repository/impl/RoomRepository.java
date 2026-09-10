@@ -1,7 +1,8 @@
-package com.svi.tictactoewebservice.repository;
+package com.svi.tictactoewebservice.repository.impl;
 
 import com.svi.tictactoewebservice.config.Config;
 import com.svi.tictactoewebservice.model.Room;
+import com.svi.tictactoewebservice.repository.RoomRecordRepository;
 import com.svi.tictactoewebservice.service.FileStorageService;
 import com.svi.tictactoewebservice.service.impl.FileStorageServiceImpl;
 import java.io.File;
@@ -9,7 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RoomRepository {
+public class RoomRepository implements RoomRecordRepository {
 
     private final File roomsFolder = new File(Config.get(Config.Keys.RECORDS_DIR.value()), Config.get(Config.Keys.ROOM_DIR.value()));
     private final FileStorageService fileStorageService = new FileStorageServiceImpl();

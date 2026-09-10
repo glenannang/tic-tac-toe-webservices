@@ -1,7 +1,8 @@
-package com.svi.tictactoewebservice.repository;
+package com.svi.tictactoewebservice.repository.impl;
 
 import com.svi.tictactoewebservice.model.MoveRecord;
 import com.svi.tictactoewebservice.config.Config;
+import com.svi.tictactoewebservice.repository.GameRecordRepository;
 import com.svi.tictactoewebservice.service.FileStorageService;
 import com.svi.tictactoewebservice.service.impl.FileStorageServiceImpl;
 
@@ -10,7 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameRepository {
+public class GameRepository implements GameRecordRepository {
 
     private final FileStorageService fileStorageService = new FileStorageServiceImpl();
 

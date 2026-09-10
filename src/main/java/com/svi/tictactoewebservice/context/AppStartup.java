@@ -8,7 +8,7 @@ import com.svi.tictactoewebservice.config.Config;
 import java.io.IOException;
 import java.io.InputStream;
 import com.svi.tictactoewebservice.config.ConfigLoader;
-import com.svi.tictactoewebservice.repository.CassandraRepository;
+
 @WebListener
 public class AppStartup implements ServletContextListener {
 

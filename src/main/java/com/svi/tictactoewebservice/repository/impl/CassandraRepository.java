@@ -1,4 +1,4 @@
-package com.svi.tictactoewebservice.repository;
+package com.svi.tictactoewebservice.repository.impl;
 
 import com.datastax.driver.core.PreparedStatement;
 import com.datastax.driver.core.ResultSet;
@@ -7,6 +7,8 @@ import com.datastax.driver.core.Session;
 import com.svi.tictactoewebservice.config.ConfigLoader;
 import com.svi.tictactoewebservice.model.MoveRecord;
 import com.svi.tictactoewebservice.model.Room;
+import com.svi.tictactoewebservice.repository.GameRecordRepository;
+import com.svi.tictactoewebservice.repository.RoomRecordRepository;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -14,7 +16,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-public class CassandraRepository {
+public class CassandraRepository implements GameRecordRepository, RoomRecordRepository {
 
     private final Session session;
     private final PreparedStatement insertMoveStatement;
@@ -24,8 +26,6 @@ public class CassandraRepository {
     private final PreparedStatement insertRoomGameStatement;
     private final PreparedStatement findGamesByRoomCodeStatement;
     private final PreparedStatement findAllRoomGamesStatement;
-
-
 
 
     public CassandraRepository(Session session) {
