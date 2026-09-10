@@ -15,6 +15,7 @@ import com.svi.tictactoewebservice.dto.response.RoomResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class PlayerServiceImpl implements PlayerService {
 
@@ -23,7 +24,7 @@ public class PlayerServiceImpl implements PlayerService {
 
 
     @Override
-    public GameListResponse getPlayerGames(String playerId) throws IOException {
+    public GameListResponse getPlayerGames(UUID playerId) throws IOException {
 
         List<String> games = gameRepository.findGamesByPlayerId(playerId);
 
@@ -41,7 +42,7 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public RoomListResponse getPlayerRooms(String playerId) throws IOException  {
+    public RoomListResponse getPlayerRooms(UUID playerId) throws IOException  {
 
         List<String> playerGames = gameRepository.findGamesByPlayerId(playerId);
         List<Room> allRooms = roomRepository.findAllRooms();

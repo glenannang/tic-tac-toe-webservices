@@ -48,7 +48,7 @@ public class GameServiceImpl implements GameService {
 
 
     @Override
-    public GameDetailsResponse getGameDetails(String gameId) throws IOException {
+    public GameDetailsResponse getGameDetails(UUID gameId) throws IOException {
 
 
         List<MoveRecord> moves = gameRepository.findMovesByGameId(gameId);

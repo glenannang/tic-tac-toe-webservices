@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class GameRepository implements GameRecordRepository {
 
@@ -64,7 +65,7 @@ public class GameRepository implements GameRecordRepository {
 
     }
 
-    public List<String> findGamesByPlayerId(String playerId) throws IOException {
+    public List<String> findGamesByPlayerId(UUID playerId) throws IOException {
 
         File playerFile = new File(playerFolder, playerId + ".txt");
 
@@ -84,7 +85,7 @@ public class GameRepository implements GameRecordRepository {
         return games;
     }
 
-    public List<MoveRecord> findMovesByGameId(String gameId) throws IOException {
+    public List<MoveRecord> findMovesByGameId(UUID gameId) throws IOException {
 
         File gameFile = new File(gameFolder, gameId + ".txt");
 

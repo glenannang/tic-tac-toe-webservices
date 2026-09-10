@@ -4,8 +4,6 @@ import com.svi.tictactoewebservice.dto.request.MoveRequest;
 import com.svi.tictactoewebservice.dto.response.*;
 import com.svi.tictactoewebservice.service.GameService;
 import com.svi.tictactoewebservice.service.impl.GameServiceImpl;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
@@ -18,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import java.io.IOException;
+import java.util.UUID;
 
 
 @Path("/game")
@@ -51,11 +50,7 @@ public class GameController {
     @GET
     @Path("/{gameId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getGame(@PathParam("gameId")
-                            @NotBlank(message = "Game ID is required.")
-                            @Pattern(regexp = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
-                                     message = "Game ID must be a valid UUID.")
-                            String gameId) {
+    public Response getGame(@PathParam("gameId") UUID gameId) {
 
         try {
             GameDetailsResponse response = gameService.getGameDetails(gameId);

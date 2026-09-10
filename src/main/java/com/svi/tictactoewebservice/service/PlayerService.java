@@ -4,9 +4,10 @@ import com.svi.tictactoewebservice.dto.response.GameListResponse;
 import com.svi.tictactoewebservice.dto.response.RoomListResponse;
 
 import java.io.IOException;
+import java.util.UUID;
 
 
 public interface PlayerService {
-    GameListResponse getPlayerGames(String playerId) throws IOException;
-    RoomListResponse getPlayerRooms(String playerId) throws IOException;
+    GameListResponse getPlayerGames(UUID playerId) throws IOException;
+    RoomListResponse getPlayerRooms(UUID playerId) throws IOException;
 }

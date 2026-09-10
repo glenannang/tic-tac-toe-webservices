@@ -103,9 +103,9 @@ public class CassandraRepository implements GameRecordRepository, RoomRecordRepo
         return false;
     }
 
-    public List<MoveRecord> findMovesByGameId(String gameId) {
+    public List<MoveRecord> findMovesByGameId(UUID gameId) {
 
-        ResultSet resultSet = session.execute(findMovesByGameIdStatement.bind(UUID.fromString(gameId)));
+        ResultSet resultSet = session.execute(findMovesByGameIdStatement.bind(gameId));
 
         List<MoveRecord> moves = new ArrayList<>();
 
@@ -132,11 +132,11 @@ public class CassandraRepository implements GameRecordRepository, RoomRecordRepo
     }
 
 
-    public List<String> findGamesByPlayerId(String playerId) {
+    public List<String> findGamesByPlayerId(UUID playerId) {
 
-        UUID playerUuid = UUID.fromString(playerId);
+        //UUID playerUuid = UUID.fromString(playerId);
 
-        ResultSet resultSet = session.execute(findGamesByPlayerIdStatement.bind(playerUuid));
+        ResultSet resultSet = session.execute(findGamesByPlayerIdStatement.bind(playerId));
 
         List<String> gameIds = new ArrayList<>();
 

@@ -1,13 +1,11 @@
 package com.svi.tictactoewebservice.dto.request;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import java.util.UUID;
 
 public class MoveRequest {
 
-    @NotBlank(message = "Game ID is required.")
-    @Pattern(regexp = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
-             message = "Game ID must be a valid UUID.")
-    private String gameid;
+    private UUID gameid;
 
     @NotBlank(message = "Symbol is required.")
     @Pattern(regexp = "[XO]",
@@ -29,11 +27,11 @@ public class MoveRequest {
     public MoveRequest() {
     }
 
-    public String getGameid() {
+    public UUID getGameid() {
         return gameid;
     }
 
-    public void setGameid(String gameid) {
+    public void setGameid(UUID gameid) {
         this.gameid = gameid;
     }
 
