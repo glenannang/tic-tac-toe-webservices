@@ -8,6 +8,6 @@ import java.util.UUID;
 
 
 public interface PlayerService {
-    GameListResponse getPlayerGames(UUID playerId) throws IOException;
-    RoomListResponse getPlayerRooms(UUID playerId) throws IOException;
+    GameListResponse getPlayerGames(UUID playerId) ;
+    RoomListResponse getPlayerRooms(UUID playerId) ;
 }

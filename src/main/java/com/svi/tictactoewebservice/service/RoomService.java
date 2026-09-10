@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public interface RoomService {
 
-    RoomResponse getRoom(String roomCode) throws IOException;
+    RoomResponse getRoom(String roomCode);
 
-    void addGameToRoom(String roomCode, UUID gameId) throws IOException;
+    void addGameToRoom(String roomCode, UUID gameId);
 }

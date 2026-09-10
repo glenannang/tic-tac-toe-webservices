@@ -11,9 +11,8 @@ import java.util.UUID;
 
 public interface GameService {
 
-    ApiResponse saveMove(MoveRequest request)throws IOException;
+    ApiResponse saveMove(MoveRequest request);
 
-    GameDetailsResponse getGameDetails(UUID gameId) throws IOException;
-
-    GameIdResponse createGameRecord(String roomCode) throws IOException;
+    GameDetailsResponse getGameDetails(UUID gameId) ;
+    GameIdResponse createGameRecord(String roomCode) ;
 }

@@ -28,23 +28,9 @@ public class PlayerController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response listGames(@PathParam("playerId") UUID playerId) {
 
-        try {
             GameListResponse response = playerService.getPlayerGames(playerId);
-
-            if (response == null) {
-                return Response.status(404).entity(new ErrorResponse("Record not found")).build();
-            }
-
             return Response.ok(response).build();
-
-        } catch (IllegalArgumentException e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorResponse(e.getMessage())).build();
-
-        } catch (IOException e) {
-            return Response.status(500).entity(new ErrorResponse("The server ran into an unexpected exception.")).build();
-        }
     }
-
 
     // Retrieves all rooms participated in by the specified player, including their games in each room
     @GET
@@ -52,21 +38,8 @@ public class PlayerController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response listRooms(@PathParam("playerId") UUID playerId) {
 
-        try {
             RoomListResponse response = playerService.getPlayerRooms(playerId);
-
-            if (response == null) {
-                return Response.status(402).entity(new ErrorResponse("Record not found")).build();
-            }
-
             return Response.ok(response).build();
 
-
-        } catch (IllegalArgumentException e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorResponse(e.getMessage())).build();
-
-        } catch (IOException e) {
-            return Response.status(500).entity(new ErrorResponse("The server ran into an unexpected exception.")).build();
-        }
     }
 }

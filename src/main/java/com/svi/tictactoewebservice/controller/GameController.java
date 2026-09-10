@@ -30,20 +30,8 @@ public class GameController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response save(@Valid MoveRequest request) {
-        try{
             ApiResponse response = gameService.saveMove(request);
             return Response.ok(response).build();
-
-        } catch (IllegalArgumentException e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorResponse(e.getMessage())).build();
-
-        } catch (IOException e) {
-            return Response.status(404).entity(new ErrorResponse("Record could not be saved")).build();
-
-        } catch (Exception e) {
-            return Response.status(500).entity(new ErrorResponse("Record could not be saved")).build();
-        }
-
     }
 
     // Retrieves all move records for a specific game
@@ -51,22 +39,8 @@ public class GameController {
     @Path("/{gameId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getGame(@PathParam("gameId") UUID gameId) {
-
-        try {
             GameDetailsResponse response = gameService.getGameDetails(gameId);
-
-            if (response == null) {
-                return Response.status(404).entity(new ErrorResponse("Record not found")).build();
-            }
-
             return Response.ok(response).build();
-
-        } catch(IllegalArgumentException e){
-            return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorResponse(e.getMessage())).build();
-
-        } catch (IOException e) {
-            return Response.status(500).entity(new ErrorResponse("The server ran into an unexpected exception.")).build();
-        }
     }
 
 }

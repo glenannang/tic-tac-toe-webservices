@@ -35,16 +35,10 @@ public class RoomController {
                                      @Pattern(regexp = "^[A-F0-9]{6}$",
                                              message = "Room code must be a valid 6-character code.")
                                      String roomCode) {
-        try {
+
             GameIdResponse gameIdResponse = gameService.createGameRecord(roomCode);
             return Response.status(Response.Status.CREATED).entity(gameIdResponse).build();
 
-        } catch (IOException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ErrorResponse("Failed to create game record.")).build();
-
-        } catch (IllegalArgumentException e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorResponse(e.getMessage())).build();
-        }
     }
 
     // Retrieves the specified room and all games created within it
@@ -57,20 +51,8 @@ public class RoomController {
                                         message = "Room code must be a valid 6-character code.")
                                 String roomCode){
 
-        try {
             RoomResponse roomResponse = roomService.getRoom(roomCode);
-
-            if(roomResponse == null){
-                return Response.status(Response.Status.NOT_FOUND).entity(new ErrorResponse("Room not found")).build();
-            }
             return Response.ok(roomResponse).build();
-
-        } catch (IOException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ErrorResponse("Failed to retrieve room.")).build();
-
-        } catch (IllegalArgumentException e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorResponse(e.getMessage())).build();
-        }
 
     }
 
