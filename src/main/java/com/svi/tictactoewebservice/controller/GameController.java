@@ -34,22 +34,16 @@ public class GameController {
         try{
             ApiResponse response = gameService.saveMove(request);
             return Response.ok(response).build();
+
         } catch (IllegalArgumentException e) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(new ErrorResponse(e.getMessage()))
-                    .build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorResponse(e.getMessage())).build();
 
         } catch (IOException e) {
-            return Response.status(402)
-                    .entity(new ErrorResponse("Record could not be saved"))
-                    .build();
+            return Response.status(404).entity(new ErrorResponse("Record could not be saved")).build();
 
         } catch (Exception e) {
-            return Response.status(500)
-                    .entity(new ErrorResponse("Record could not be saved"))
-                    .build();
+            return Response.status(500).entity(new ErrorResponse("Record could not be saved")).build();
         }
-
 
     }
 
@@ -67,7 +61,7 @@ public class GameController {
             GameDetailsResponse response = gameService.getGameDetails(gameId);
 
             if (response == null) {
-                return Response.status(402).entity(new ErrorResponse("Record not found")).build();
+                return Response.status(404).entity(new ErrorResponse("Record not found")).build();
             }
 
             return Response.ok(response).build();

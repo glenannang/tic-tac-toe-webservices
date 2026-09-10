@@ -23,7 +23,6 @@ import java.io.IOException;
 public class RoomController {
 
     private final GameService gameService = new GameServiceImpl();
-
     private final RoomService roomService = new RoomServiceImpl();
 
 
@@ -36,7 +35,6 @@ public class RoomController {
                                      @Pattern(regexp = "^[A-F0-9]{6}$",
                                              message = "Room code must be a valid 6-character code.")
                                      String roomCode) {
-
         try {
             GameIdResponse gameIdResponse = gameService.createGameRecord(roomCode);
             return Response.status(Response.Status.CREATED).entity(gameIdResponse).build();

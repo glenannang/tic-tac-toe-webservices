@@ -40,22 +40,16 @@ public class PlayerController {
             GameListResponse response = playerService.getPlayerGames(playerId);
 
             if (response == null) {
-                return Response.status(402).entity(new ErrorResponse("Record not found")).build();
+                return Response.status(404).entity(new ErrorResponse("Record not found")).build();
             }
 
             return Response.ok(response).build();
 
         } catch (IllegalArgumentException e) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(new ErrorResponse(e.getMessage()))
-                    .build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorResponse(e.getMessage())).build();
 
         } catch (IOException e) {
-            return Response.status(500)
-                    .entity(new ErrorResponse(
-                            "The server ran into an unexpected exception."
-                    ))
-                    .build();
+            return Response.status(500).entity(new ErrorResponse("The server ran into an unexpected exception.")).build();
         }
     }
 
