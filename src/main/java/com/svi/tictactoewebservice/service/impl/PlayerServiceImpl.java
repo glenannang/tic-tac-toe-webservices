@@ -20,7 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class PlayerServiceImpl implements PlayerService {
+
+    private static final Logger logger = LoggerFactory.getLogger(PlayerServiceImpl.class);
 
     private final GameRecordRepository gameRepository = new GameRepository();
     private final RoomRecordRepository roomRepository = new RoomRepository();
@@ -29,10 +34,14 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public GameListResponse getPlayerGames(UUID playerId) {
 
+        logger.info("Retrieving games for playerId={}", playerId);
+
         try {
             List<UUID> games = gameRepository.findGamesByPlayerId(playerId);
 
             if (games == null || games.isEmpty()) {
+
+                logger.warn("No games found for playerId={}", playerId);
                 throw new NotFoundException(Message.RECORD_NOT_FOUND.getMessage());
             }
 
@@ -45,12 +54,15 @@ public class PlayerServiceImpl implements PlayerService {
             return new GameListResponse(gameList, Message.RECORDS_FOUND.getMessage());
 
         } catch (IOException e) {
+            logger.error("Failed to retrieve games for playerId={}", playerId, e);
             throw new InternalServerException(Message.INTERNAL_SERVER_ERROR.getMessage(), e);
         }
     }
 
     @Override
     public RoomListResponse getPlayerRooms(UUID playerId) {
+        logger.info("Retrieving rooms for playerId={}", playerId);
+
         try {
             List<UUID> playerGames = gameRepository.findGamesByPlayerId(playerId);
             List<Room> allRooms = roomRepository.findAllRooms();
@@ -78,6 +90,7 @@ public class PlayerServiceImpl implements PlayerService {
             return new RoomListResponse(roomList, Message.RECORDS_FOUND.getMessage());
 
         } catch (IOException e) {
+            logger.error("Failed to retrieve rooms for playerId={}", playerId, e);
             throw new InternalServerException(Message.INTERNAL_SERVER_ERROR.getMessage(), e);
         }
     }
