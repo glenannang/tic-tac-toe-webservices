@@ -1,6 +1,7 @@
 package com.svi.tictactoewebservice.validator;
 
 import com.svi.tictactoewebservice.dto.request.MoveRequest;
+import com.svi.tictactoewebservice.enums.Message;
 import com.svi.tictactoewebservice.model.MoveRecord;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class MoveValidator {
 
     private void validateFirstMove(MoveRequest request) {
         if (!"X".equals(request.getSymbol())) {
-            throw new IllegalArgumentException("First move must be X.");
+            throw new IllegalArgumentException(Message.FIRST_MOVE_MUST_BE_X.getMessage());
         }
     }
 
@@ -35,7 +36,7 @@ public class MoveValidator {
 
         for (MoveRecord move : existingMoves) {
             if (move.getLocation().equals(request.getLocation())) {
-                throw new IllegalArgumentException( "Location is already occupied.");
+                throw new IllegalArgumentException(Message.LOCATION_OCCUPIED.getMessage());
             }
         }
     }
@@ -46,7 +47,7 @@ public class MoveValidator {
         String expectedSymbol = "X".equals(lastMove.getSymbol()) ? "O" : "X";
 
         if (!expectedSymbol.equals(request.getSymbol())) {
-            throw new IllegalArgumentException("Invalid turn. Expected " + expectedSymbol + ".");
+            throw new IllegalArgumentException(String.format(Message.INVALID_TURN.getMessage(), expectedSymbol));
         }
     }
 
@@ -60,14 +61,14 @@ public class MoveValidator {
         }
 
         if (!playerIds.contains(request.getPlayerid()) && playerIds.size() >= 2) {
-            throw new IllegalArgumentException("Game already has two players.");
+            throw new IllegalArgumentException(Message.GAME_PLAYER_LIMIT.getMessage());
         }
     }
 
     private void validatePlayerSymbol(MoveRequest request, List<MoveRecord> existingMoves) {
         for (MoveRecord move : existingMoves) {
             if (move.getPlayerid().equals(request.getPlayerid()) && !move.getSymbol().equals(request.getSymbol())) {
-                throw new IllegalArgumentException("Player cannot change symbols.");
+                throw new IllegalArgumentException(Message.PLAYER_SYMBOL_CHANGE.getMessage());
             }
         }
     }
@@ -76,7 +77,7 @@ public class MoveValidator {
         for (MoveRecord move : existingMoves) {
 
             if (move.getSymbol().equals(request.getSymbol()) && !move.getPlayerid().equals(request.getPlayerid())) {
-                throw new IllegalArgumentException("Symbol is already assigned to another player.");
+                throw new IllegalArgumentException(Message.SYMBOL_ALREADY_ASSIGNED.getMessage());
             }
 
         }
@@ -92,7 +93,7 @@ public class MoveValidator {
         }
 
         if (hasWinner(board) || existingMoves.size() >= 9) {
-            throw new IllegalArgumentException("Game is already finished.");
+            throw new IllegalArgumentException(Message.GAME_ALREADY_FINISHED.getMessage());
         }
 
     }

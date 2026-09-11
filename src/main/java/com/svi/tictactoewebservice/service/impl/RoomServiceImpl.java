@@ -2,6 +2,7 @@ package com.svi.tictactoewebservice.service.impl;
 
 import com.svi.tictactoewebservice.connection.CassandraConnection;
 import com.svi.tictactoewebservice.dto.response.RoomResponse;
+import com.svi.tictactoewebservice.enums.Message;
 import com.svi.tictactoewebservice.exception.InternalServerException;
 import com.svi.tictactoewebservice.exception.NotFoundException;
 import com.svi.tictactoewebservice.model.Room;
@@ -27,13 +28,13 @@ public class RoomServiceImpl implements RoomService {
             Room room = roomRepository.findRoom(roomCode);
 
             if (room == null) {
-                throw new NotFoundException("Room not found.");
+                throw new NotFoundException(Message.ROOM_NOT_FOUND.getMessage());
             }
 
             return new RoomResponse(room.getRoomCode(), room.getGameIds());
 
         } catch (IOException e) {
-            throw new InternalServerException("The server ran into an unexpected exception.", e);
+            throw new InternalServerException(Message.INTERNAL_SERVER_ERROR.getMessage(), e);
         }
     }
 
@@ -42,7 +43,7 @@ public class RoomServiceImpl implements RoomService {
         try {
             roomRepository.addGameToRoom(roomCode, gameId);
         } catch (IOException e) {
-            throw new InternalServerException("The server ran into an unexpected exception.", e);
+            throw new InternalServerException(Message.INTERNAL_SERVER_ERROR.getMessage(), e);
         }
     }
 }

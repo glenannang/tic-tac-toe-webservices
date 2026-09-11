@@ -3,6 +3,7 @@ package com.svi.tictactoewebservice.service.impl;
 import com.svi.tictactoewebservice.connection.CassandraConnection;
 import com.svi.tictactoewebservice.dto.response.GameListResponse;
 import com.svi.tictactoewebservice.dto.response.RoomListResponse;
+import com.svi.tictactoewebservice.enums.Message;
 import com.svi.tictactoewebservice.exception.InternalServerException;
 import com.svi.tictactoewebservice.exception.NotFoundException;
 import com.svi.tictactoewebservice.repository.GameRecordRepository;
@@ -32,7 +33,7 @@ public class PlayerServiceImpl implements PlayerService {
             List<UUID> games = gameRepository.findGamesByPlayerId(playerId);
 
             if (games == null || games.isEmpty()) {
-                throw new NotFoundException("Record not found.");
+                throw new NotFoundException(Message.RECORD_NOT_FOUND.getMessage());
             }
 
             List<GameListResponse.GameId> gameList = new ArrayList<>();
@@ -41,10 +42,10 @@ public class PlayerServiceImpl implements PlayerService {
                 gameList.add(new GameListResponse.GameId(gameId.toString()));
             }
 
-            return new GameListResponse(gameList, "Records found");
+            return new GameListResponse(gameList, Message.RECORDS_FOUND.getMessage());
 
         } catch (IOException e) {
-            throw new InternalServerException("The server ran into an unexpected exception.", e);
+            throw new InternalServerException(Message.INTERNAL_SERVER_ERROR.getMessage(), e);
         }
     }
 
@@ -74,10 +75,10 @@ public class PlayerServiceImpl implements PlayerService {
                 }
             }
 
-            return new RoomListResponse(roomList, "Records found");
+            return new RoomListResponse(roomList, Message.RECORDS_FOUND.getMessage());
 
         } catch (IOException e) {
-            throw new InternalServerException("The server ran into an unexpected exception.", e);
+            throw new InternalServerException(Message.INTERNAL_SERVER_ERROR.getMessage(), e);
         }
     }
 }

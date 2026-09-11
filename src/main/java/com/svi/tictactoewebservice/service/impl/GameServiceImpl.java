@@ -2,6 +2,7 @@ package com.svi.tictactoewebservice.service.impl;
 import com.svi.tictactoewebservice.connection.CassandraConnection;
 import com.svi.tictactoewebservice.dto.request.MoveRequest;
 import com.svi.tictactoewebservice.dto.response.*;
+import com.svi.tictactoewebservice.enums.Message;
 import com.svi.tictactoewebservice.exception.BadRequestException;
 import com.svi.tictactoewebservice.exception.InternalServerException;
 import com.svi.tictactoewebservice.exception.NotFoundException;
@@ -45,13 +46,13 @@ public class GameServiceImpl implements GameService {
                 record.setDatesave(LocalDateTime.now().format(formatter));
 
                 gameRepository.saveMove(record);
-                return new ApiResponse("Record saved.");
+                return new ApiResponse(Message.RECORD_SAVED.getMessage());
 
             } catch (IllegalArgumentException e) {
                 throw new BadRequestException(e.getMessage());
 
             } catch (IOException e) {
-                throw new InternalServerException("Record could not be saved.", e);
+                throw new InternalServerException(Message.RECORD_SAVE_FAILED.getMessage(), e);
             }
     }
 
@@ -63,13 +64,13 @@ public class GameServiceImpl implements GameService {
                     gameRepository.findMovesByGameId(gameId);
 
             if (moves == null || moves.isEmpty()) {
-                throw new NotFoundException("Record not found.");
+                throw new NotFoundException(Message.RECORD_NOT_FOUND.getMessage());
             }
 
-            return new GameDetailsResponse(moves, "Records found");
+            return new GameDetailsResponse(moves, Message.RECORDS_FOUND.getMessage());
 
         } catch (IOException e) {
-            throw new InternalServerException("The server ran into an unexpected exception.", e);
+            throw new InternalServerException(Message.INTERNAL_SERVER_ERROR.getMessage(), e);
         }
 
     }
